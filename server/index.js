@@ -5,10 +5,10 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import clientRoutes from './routes/clientRoutes';
+import clientRoutes from './routes/clientRoutes.js';
 import generalRoutes from './routes/generalRoutes.js';
-import managementRoutes from './routes/managementRoutes';
-import salesRoutes from './routes/aslesRoutes.js';
+import managementRoutes from './routes/managementRoutes.js';
+import salesRoutes from './routes/salesRoutes.js';
 
 
 
