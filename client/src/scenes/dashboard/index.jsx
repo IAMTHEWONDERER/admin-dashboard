@@ -1,6 +1,6 @@
 import React from 'react'
 
-function index() {
+const index = () => {
   return (
     <div>index</div>
   )
