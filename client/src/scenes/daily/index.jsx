@@ -7,8 +7,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const Daily = () => {
-  const [startDate, setStartDate] = useState(new Date("2024-02-01"));
-  const [endDate, setEndDate] = useState(new Date("2024-03-01"));
+  const [startDate, setStartDate] = useState(new Date("2021-02-01"));
+  const [endDate, setEndDate] = useState(new Date("2021-03-01"));
   const { data } = useGetSalesQuery();
   const theme = useTheme();
 

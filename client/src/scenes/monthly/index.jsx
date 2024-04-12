@@ -154,4 +154,3 @@ const Monthly = () => {
 };
 
 export default Monthly;
- 
