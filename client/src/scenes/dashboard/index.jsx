@@ -66,7 +66,7 @@ const Dashboard = () => {
           <Button
             sx={{
               backgroundColor: theme.palette.secondary.light,
-              color: theme.palette.background.alt,
+              color: "#FFFFFF",
               fontSize: "14px",
               fontWeight: "bold",
               padding: "10px 20px",
