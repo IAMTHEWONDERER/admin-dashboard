@@ -28,15 +28,15 @@
     },
     secondary: {
       // dark red
-      50: "#ce0000",
+      50: "#000000",
       100: "#ce0000",
-      200: "#ce0000",
-      300: "#ce0000",
-      400: "#ce0000",
-      500: "#ce0000",
-      600: "#ce0000",
-      700: "#ce0000",
-      800: "#ce0000",
+      200: "#ffa7a7",
+      300: "#ff9393",
+      400: "#ff8080",
+      500: "#ff6c6c",
+      600: "#ff4545",
+      700: "#ff3131",
+      800: "#be1010",
       900: "#ce0000",
       1000: "#FFFFFF",
     },
@@ -80,7 +80,7 @@
               },
               secondary: {
                 ...tokensDark.secondary,
-                main: tokensDark.secondary[500],
+                main: tokensDark.secondary[900],
               },
               neutral: {
                 ...tokensDark.grey,

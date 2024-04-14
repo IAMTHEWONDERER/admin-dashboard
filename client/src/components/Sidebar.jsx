@@ -1,6 +1,5 @@
-import React from "react";
-import logo1 from 'assets/Atlas-black.png'; // Updated path
-import logo2 from 'assets/Atlas-white.png'; // Updated path
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
   Drawer,
@@ -28,68 +27,26 @@ import {
   TrendingUpOutlined,
   PieChartOutlined,
 } from "@mui/icons-material";
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import { themeSettings } from "theme"; // Import theme settings
+import logo1 from "assets/Atlas-black.png";
+import logo2 from "assets/Atlas-white.png";
 
 const navItems = [
-  {
-    text: "Dashboard",
-    icon: <HomeOutlined />,
-  },
-  {
-    text: "Client Facing",
-    icon: null,
-  },
-  {
-    text: "Products",
-    icon: <ShoppingCartOutlined />,
-  },
-  {
-    text: "Customers",
-    icon: <Groups2Outlined />,
-  },
-  {
-    text: "Transactions",
-    icon: <ReceiptLongOutlined />,
-  },
-  {
-    text: "Geography",
-    icon: <PublicOutlined />,
-  },
-  {
-    text: "Sales",
-    icon: null,
-  },
-  {
-    text: "Overview",
-    icon: <PointOfSaleOutlined />,
-  },
-  {
-    text: "Daily",
-    icon: <TodayOutlined />,
-  },
-  {
-    text: "Monthly",
-    icon: <CalendarMonthOutlined />,
-  },
-  {
-    text: "Breakdown",
-    icon: <PieChartOutlined />,
-  },
-  {
-    text: "Management",
-    icon: null,
-  },
-  {
-    text: "Admin",
-    icon: <AdminPanelSettingsOutlined />,
-  },
-  {
-    text: "Performance",
-    icon: <TrendingUpOutlined />,
-  },
+  { text: "Dashboard", icon: <HomeOutlined /> },
+  { text: "Client Facing", icon: null },
+  { text: "Products", icon: <ShoppingCartOutlined /> },
+  { text: "Customers", icon: <Groups2Outlined /> },
+  { text: "Transactions", icon: <ReceiptLongOutlined /> },
+  { text: "Geography", icon: <PublicOutlined /> },
+  { text: "Sales", icon: null },
+  { text: "Overview", icon: <PointOfSaleOutlined /> },
+  { text: "Daily", icon: <TodayOutlined /> },
+  { text: "Monthly", icon: <CalendarMonthOutlined /> },
+  { text: "Breakdown", icon: <PieChartOutlined /> },
+  { text: "Management", icon: null },
+  { text: "Admin", icon: <AdminPanelSettingsOutlined /> },
+  { text: "Performance", icon: <TrendingUpOutlined /> },
 ];
 
 const Sidebar = ({
@@ -103,8 +60,8 @@ const Sidebar = ({
   const [active, setActive] = useState("");
   const navigate = useNavigate();
   const theme = useTheme();
-  const themeMode = theme.palette.mode; // Get theme mode (dark or light)
-  const themeColors = themeSettings(themeMode).palette; // Get theme colors
+  const themeMode = theme.palette.mode;
+  const themeColors = themeSettings(themeMode).palette;
 
   useEffect(() => {
     setActive(pathname.substring(1));
@@ -121,8 +78,8 @@ const Sidebar = ({
           sx={{
             width: drawerWidth,
             "& .MuiDrawer-paper": {
-              color: themeColors.secondary[1000], // Use theme colors
-              backgroundColor: themeColors.background.alt, // Use theme colors
+              color: themeColors.secondary[1000],
+              backgroundColor: themeColors.background.alt,
               boxSizing: "border-box",
               borderWidth: isNonMobile ? 0 : "2px",
               width: drawerWidth,
@@ -132,14 +89,14 @@ const Sidebar = ({
           <Box width="100%">
             <Box m="1.5rem 2rem 2rem 3rem">
               <FlexBetween color={themeColors.secondary.main}>
-              <Box display="flex" alignItems="center" gap="0.5rem">
-              <img 
-                src={themeMode === 'dark' ? logo2 : logo1} 
-                alt="ATLAS Logo" 
-                height="50px" 
-                width="auto" 
-              /> 
-              </Box>   
+                <Box display="flex" alignItems="center" gap="0.5rem">
+                  <img
+                    src={themeMode === "dark" ? logo2 : logo1}
+                    alt="ATLAS Logo"
+                    height="50px"
+                    width="auto"
+                  />
+                </Box>
                 {!isNonMobile && (
                   <IconButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
                     <ChevronLeft />
@@ -151,7 +108,10 @@ const Sidebar = ({
               {navItems.map(({ text, icon }) => {
                 if (!icon) {
                   return (
-                    <Typography key={text} sx={{ m: "2.25rem 0 1rem 3rem" }}>
+                    <Typography
+                      key={text}
+                      sx={{ m: "2.25rem 0 1rem 3rem", color: themeColors.secondary[1000] }}
+                    >
                       {text}
                     </Typography>
                   );
@@ -168,24 +128,27 @@ const Sidebar = ({
                       }}
                       sx={{
                         backgroundColor: isActive
-                          ? themeColors.secondary[1000] // Use theme colors
+                          ? themeColors.secondary[900] // Red color when active
                           : "transparent",
                         color: isActive
-                          ? themeColors.primary[600] // Use theme colors
-                          : themeColors.secondary[1000], // Use theme colors
+                          ? themeMode === "light" ? "#FFFFFF" : themeColors.secondary[1000] // White text when active in light mode
+                          : themeColors.secondary[1000], // Secondary 1000 for text
                       }}
                     >
                       <ListItemIcon
                         sx={{
                           ml: "2rem",
                           color: isActive
-                            ? themeColors.primary[600] // Use theme colors
-                            : themeColors.secondary[1000], // Use theme colors
+                            ? themeColors.secondary[1000]
+                            : themeColors.secondary[900],
                         }}
                       >
                         {icon}
                       </ListItemIcon>
-                      <ListItemText primary={text} />
+                      <ListItemText
+                        primary={text}
+                        sx={{ color: isActive ? "#FFFFFF" : themeColors.secondary[1000] }} // White text when active
+                      />
                       {isActive && (
                         <ChevronRightOutlined sx={{ ml: "auto" }} />
                       )}
@@ -202,3 +165,4 @@ const Sidebar = ({
 };
 
 export default Sidebar;
+  
