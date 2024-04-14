@@ -1,102 +1,46 @@
-import React from "react";
-import { Box, useTheme } from "@mui/material";
-import { useGetGeographyQuery } from "state/api";
-import Header from "components/Header";
-import { ResponsiveChoropleth } from "@nivo/geo";
-import { geoData } from "state/geoData";
+import React, { useState } from 'react';
+import { TextField, Button, Typography } from '@mui/material';
 
-const Geography = () => {
-  const theme = useTheme();
-  const { data } = useGetGeographyQuery();
+function MyScene() {
+  const [formData, setFormData] = useState({
+    firstName: 'John',
+    lastName: 'Doe',
+    weight: '70 kg',
+    height: '180 cm',
+    address: '123 Main St, City, Country',
+    gender: 'Male',
+    dob: '01/01/1990',
+    idCardNumber: '123456789',
+    yearsOfExperience: '5 years',
+    motivationalText: 'I am a highly motivated individual seeking new opportunities.',
+  });
+
+  const handleFileUpload = (fieldName, event) => {
+    // Handle file upload logic
+  };
 
   return (
-    <Box m="1.5rem 2.5rem">
-      <Header title="GEOGRAPHY" subtitle="Find where your users are located." />
-      <Box
-        mt="40px"
-        height="75vh"
-        border={`1px solid ${theme.palette.secondary[200]}`}
-        borderRadius="4px"
-      >
-        {data ? (
-          <ResponsiveChoropleth
-            data={data}
-            theme={{
-              axis: {
-                domain: {
-                  line: {
-                    stroke: theme.palette.secondary[200],
-                  },
-                },
-                legend: {
-                  text: {
-                    fill: theme.palette.secondary[200],
-                  },
-                },
-                ticks: {
-                  line: {
-                    stroke: theme.palette.secondary[200],
-                    strokeWidth: 1,
-                  },
-                  text: {
-                    fill: theme.palette.secondary[200],
-                  },
-                },
-              },
-              legends: {
-                text: {
-                  fill: theme.palette.secondary[200],
-                },
-              },
-              tooltip: {
-                container: {
-                  color: theme.palette.primary.main,
-                },
-              },
-            }}
-            features={geoData.features}
-            margin={{ top: 0, right: 0, bottom: 0, left: -50 }}
-            domain={[0, 60]}
-            unknownColor="#666666"
-            label="properties.name"
-            valueFormat=".2s"
-            projectionScale={150}
-            projectionTranslation={[0.45, 0.6]}
-            projectionRotation={[0, 0, 0]}
-            borderWidth={1.3}
-            borderColor="#ffffff"
-            legends={[
-              {
-                anchor: "bottom-right",
-                direction: "column",
-                justify: true,
-                translateX: 0,
-                translateY: -125,
-                itemsSpacing: 0,
-                itemWidth: 94,
-                itemHeight: 18,
-                itemDirection: "left-to-right",
-                itemTextColor: theme.palette.secondary[200],
-                itemOpacity: 0.85,
-                symbolSize: 18,
-                effects: [
-                  {
-                    on: "hover",
-                    style: {
-                      itemTextColor: theme.palette.background.alt,
-                      itemOpacity: 1,
-                    },
-                  },
-                ],
-              },
-            ]}
-          />
-        ) : (
-          <>Loading...</>
-        )}
-      </Box>
-    </Box>
+    <div>
+      <Typography variant="h4">Applicant Information</Typography>
+      {Object.entries(formData).map(([key, value]) => (
+        <TextField
+          key={key}
+          id={key}
+          label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+          value={value}
+          InputProps={{ readOnly: true }}
+          variant="outlined"
+          fullWidth
+          margin="normal"
+        />
+      ))}
+      <Button variant="outlined" component="label">
+        Upload CV
+        <input type="file" hidden onChange={(e) => handleFileUpload('cv', e)} />
+      </Button>
+      {/* Add similar buttons for other file uploads */}
+    </div>
   );
-};
+}
 
-export default Geography;
+export default MyScene;
