@@ -28,7 +28,7 @@ import {
   PieChartOutlined,
 } from "@mui/icons-material";
 import FlexBetween from "./FlexBetween";
-import { themeSettings } from "theme"; // Import theme settings
+import { themeSettings } from "theme"; 
 import logo1 from "assets/Atlas-black.png";
 import logo2 from "assets/Atlas-white.png";
 
@@ -38,7 +38,7 @@ const navItems = [
   { text: "Products", icon: <ShoppingCartOutlined /> },
   { text: "Customers", icon: <Groups2Outlined /> },
   { text: "Transactions", icon: <ReceiptLongOutlined /> },
-  { text: "Geography", icon: <PublicOutlined /> },
+  { text: "Applications", icon: <PublicOutlined /> },
   { text: "Sales", icon: null },
   { text: "Overview", icon: <PointOfSaleOutlined /> },
   { text: "Daily", icon: <TodayOutlined /> },
