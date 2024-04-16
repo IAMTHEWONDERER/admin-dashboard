@@ -17,7 +17,7 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <LogIn/>
-          <AdminDashboard /> {/* Render your AdminDashboard component */}
+          <AdminDashboard />
         </ThemeProvider>
       </BrowserRouter>
     </div>
