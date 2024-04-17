@@ -105,7 +105,6 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
                   fontSize="0.75rem"
                   sx={{ color: theme.palette.secondary[200] }}
                 >
-                  {user.occupation}
                 </Typography>
               </Box>
               <ArrowDropDownOutlined
