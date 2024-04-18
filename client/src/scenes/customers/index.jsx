@@ -17,7 +17,7 @@ const Customers = () => {
     },
     {
       field: "name",
-      headerName: "Name",
+      headerName: "FullName",
       flex: 0.5,
     },
     {
@@ -26,33 +26,30 @@ const Customers = () => {
       flex: 1,
     },
     {
-      field: "phoneNumber",
-      headerName: "Phone Number",
-      flex: 0.5,
-      renderCell: (params) => {
-        return params.value.replace(/^(\d{3})(\d{3})(\d{4})/, "($1)$2-$3");
-      },
-    },
-    {
-      field: "country",
-      headerName: "Country",
-      flex: 0.4,
-    },
-    {
-      field: "occupation",
-      headerName: "Occupation",
+      field: "Subscription-type",
+      headerName: "Subscription Type",
       flex: 1,
     },
     {
-      field: "role",
-      headerName: "Role",
-      flex: 0.5,
+      field: "Status",
+      headerName: "Status",
+      flex: 1,
+    },
+    {
+      field: "Ban",
+      headerName: "Ban",
+      flex: 0,
+    },
+    {
+      field: "Delete",
+      headerName: "Delete",
+      flex: 0,
     },
   ];
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="CUSTOMERS" subtitle="List of Customers" />
+      <Header title="Users" subtitle="List of Users" />
       <Box
         mt="40px"
         height="75vh"

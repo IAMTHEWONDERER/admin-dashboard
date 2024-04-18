@@ -35,7 +35,7 @@ import logo2 from "assets/Atlas-white.png";
 const navItems = [
   { text: "Dashboard", icon: <HomeOutlined /> },
   { text: "Client Facing", icon: null },
-  { text: "Products", icon: <ShoppingCartOutlined /> },
+  { text: "Coaches", icon: <ShoppingCartOutlined /> },
   { text: "Customers", icon: <Groups2Outlined /> },
   { text: "Transactions", icon: <ReceiptLongOutlined /> },
   { text: "Applications", icon: <PublicOutlined /> },

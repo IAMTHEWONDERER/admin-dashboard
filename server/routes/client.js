@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get("/products", getProducts);
 router.get("/customers", getCustomers);
-router.get("/transactions", getTransactions);
+router.get("/booking", getTransactions);
 router.get("/Applications", getApplications);
 
-export default router;
+export default router ;

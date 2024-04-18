@@ -17315,7 +17315,6 @@ export const dataUser = [
     city: "Nurabelen",
     state: null,
     country: "ID",
-    occupation: "Computer Systems Analyst I",
     phoneNumber: "8346315874",
     transactions: [
       "63701d74f0323986f3000158",
@@ -17323,7 +17322,6 @@ export const dataUser = [
       "63701d74f03239867500014b",
       "63701d74f032398675000152",
     ],
-    role: "superadmin",
   },
   {
     _id: "63701cc1f03239c72c000180",
@@ -17333,7 +17331,6 @@ export const dataUser = [
     city: "Zhanghekou",
     state: null,
     country: "CN",
-    occupation: "Food Chemist",
     phoneNumber: "9981906117",
     transactions: [
       "63701d74f03239b7f7000027",
@@ -17341,7 +17338,7 @@ export const dataUser = [
       "63701d74f03239569400002d",
       "63701d74f032394c4900014b",
     ],
-    role: "user",
+    status: "not banned",
   },
   {
     _id: "63701cc1f03239c72c000181",
@@ -17351,7 +17348,6 @@ export const dataUser = [
     city: "Muang Sam Sip",
     state: null,
     country: "TH",
-    occupation: "Staff Scientist",
     phoneNumber: "3868813669",
     transactions: [
       "63701d74f03239d40b00008c",
@@ -17361,7 +17357,6 @@ export const dataUser = [
       "63701d74f032390a34000340",
       "63701d74f03239d40b000087",
     ],
-    role: "admin",
   },
   {
     _id: "63701cc1f03239c72c000182",
