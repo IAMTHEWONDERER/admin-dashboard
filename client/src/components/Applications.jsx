@@ -9,7 +9,7 @@ function Applications() {
     lastName: 'Doe',
     weight: '70 kg',
     height: '180 cm',
-    address: '123 Main St, City, Country',
+    address: '123 Main St, City, status',
     gender: 'Male',
     dob: '01/01/1990',
     idCardNumber: '123456789',

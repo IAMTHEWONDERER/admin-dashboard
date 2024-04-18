@@ -34,8 +34,8 @@ const Admin = () => {
       },
     },
     {
-      field: "country",
-      headerName: "Country",
+      field: "status",
+      headerName: "status",
       flex: 0.4,
     },
     {

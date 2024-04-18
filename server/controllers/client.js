@@ -77,8 +77,8 @@ export const getApplications = async (req, res) => {
   try {
     const users = await User.find();
 
-    const mappedLocations = users.reduce((acc, { country }) => {
-      const countryISO3 = getCountryIso3(country);
+    const mappedLocations = users.reduce((acc, { status }) => {
+      const countryISO3 = getCountryIso3(status);
       if (!acc[countryISO3]) {
         acc[countryISO3] = 0;
       }
@@ -87,8 +87,8 @@ export const getApplications = async (req, res) => {
     }, {});
 
     const formattedLocations = Object.entries(mappedLocations).map(
-      ([country, count]) => {
-        return { id: country, value: count };
+      ([status, count]) => {
+        return { id: status, value: count };
       }
     );
 

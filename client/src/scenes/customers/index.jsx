@@ -1,13 +1,18 @@
 import React from "react";
-import { Box, useTheme } from "@mui/material";
-import { useGetCustomersQuery } from "state/api";
+import { Box, Button, useTheme } from "@mui/material";
+import { useGetCustomersQuery, useUpdateCustomerMutation } from "state/api";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
 
 const Customers = () => {
   const theme = useTheme();
   const { data, isLoading } = useGetCustomersQuery();
-  console.log("data", data);
+  const [updateCustomer] = useUpdateCustomerMutation(); // Mutation for updating customer status
+
+  const handleBanClick = (customerId) => {
+    // Call the mutation to update the customer status
+    updateCustomer({ id: customerId, status: "banned" });
+  };
 
   const columns = [
     {
@@ -34,8 +39,8 @@ const Customers = () => {
       },
     },
     {
-      field: "country",
-      headerName: "Country",
+      field: "status",
+      headerName: "Status",
       flex: 0.4,
     },
     {
@@ -47,6 +52,21 @@ const Customers = () => {
       field: "role",
       headerName: "Role",
       flex: 0.5,
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 0.5,
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handleBanClick(params.row._id)}
+          disabled={params.row.status === "banned"} // Disable the button if status is already banned
+        >
+          Ban
+        </Button>
+      ),
     },
   ];
 

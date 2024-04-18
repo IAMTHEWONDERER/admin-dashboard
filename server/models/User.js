@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema(
     },
     city: String,
     state: String,
-    country: String,
+    status: String,
     occupation: String,
     phoneNumber: String,
     transactions: Array,
@@ -29,6 +29,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       enum: ["user", "admin", "superadmin"],
       default: "admin",
+    },
+    status:{
+      type: String,
+        enum: ["banned", "not banned"],
+        default: "not banned",
     },
   },
   { timestamps: true }

@@ -3,7 +3,7 @@ import { createTheme } from "@mui/material/styles";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import AdminDashboard from "pages/adminDashboard"; // Update import path
+import AdminDashboard from "pages/adminDashboard";
 import { themeSettings } from "theme";
 import LogIn from "pages/signin";
 
