@@ -1,56 +1,109 @@
-import React, { useState } from "react";
-import { Search } from "@mui/icons-material";
-import { IconButton, TextField, InputAdornment } from "@mui/material";
-import {
-  GridToolbarDensitySelector,
-  GridToolbarContainer,
-  GridToolbarExport,
-  GridToolbarColumnsButton,
-} from "@mui/x-data-grid";
-import FlexBetween from "components/FlexBetween";
-import Applications from "components/Applications"; // Import your Applications component here
+import { useState, useEffect } from 'react'; // Remove the React import
+import React from 'react';
+import axios from 'axios';
+import TextField from '@mui/material/TextField';
 
-const DataGridCustomToolbar = ({ searchInput, setSearchInput, setSearch }) => {
-  const [showApplications, setShowApplications] = useState(false); // State to control visibility of Applications component
+function Applications() {
+  const [applications, setApplications] = useState([]);
+  const [currentApplicationIndex, setCurrentApplicationIndex] = useState(0);
+  const [noMoreApplications, setNoMoreApplications] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/applications');
+        const pendingApplications = response.data.filter(app => app.status === 'pending');
+        setApplications(pendingApplications);
+        setLoading(false);
+        if (pendingApplications.length === 0) {
+          setNoMoreApplications(true);
+        }
+      } catch (error) {
+        console.error('Error fetching applications:', error);
+      }
+    };
+
+    fetchApplications();
+  }, []);
+
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await axios.patch(`http://localhost:5000/applications/${id}`, { status: newStatus });
+      moveNextApplication();
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
+  };
+
+  const moveNextApplication = () => {
+    if (currentApplicationIndex < applications.length - 1) {
+      setCurrentApplicationIndex(prevIndex => prevIndex + 1);
+    } else {
+      setNoMoreApplications(true);
+    }
+  };
+
+  const currentApplication = applications[currentApplicationIndex];
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <GridToolbarContainer>
-      <FlexBetween width="100%">
-        <FlexBetween>
-          <GridToolbarColumnsButton />
-          <GridToolbarDensitySelector />
-          <GridToolbarExport />
-          {/* Button to toggle Applications component visibility */}
-          <IconButton onClick={() => setShowApplications(!showApplications)}>
-            {showApplications ? "Hide Applications" : "Show Applications"}
-          </IconButton>
-        </FlexBetween>
-        <TextField
-          label="Search..."
-          sx={{ mb: "0.5rem", width: "15rem" }}
-          onChange={(e) => setSearchInput(e.target.value)}
-          value={searchInput}
-          variant="standard"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => {
-                    setSearch(searchInput);
-                    setSearchInput("");
-                  }}
-                >
-                  <Search />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </FlexBetween>
-      {/* Conditionally render Applications component */}
-      {showApplications && <Applications />}
-    </GridToolbarContainer>
+    <div>
+      {noMoreApplications ? (
+        <p>No more pending applications</p>
+      ) : (
+        currentApplication && (
+          <div>
+            <TextField
+              id="applicant-name"
+              label="Name"
+              value={currentApplication.name} // Use value instead of defaultValue
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <br />
+            <TextField
+              id="applicant-position"
+              label="Position"
+              value={currentApplication.position} // Use value instead of defaultValue
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <br />
+            <TextField
+              id="applicant-experience"
+              label="Experience"
+              value={currentApplication.experience} // Use value instead of defaultValue
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <br />
+            <TextField
+              id="applicant-status"
+              label="Status"
+              value={currentApplication.status} // Use value instead of defaultValue
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <br />
+            <button onClick={() => handleStatusChange(currentApplication.id, 'approved')}>
+              Approve
+            </button>
+            <button onClick={() => handleStatusChange(currentApplication.id, 'declined')}>
+              Decline
+            </button>
+          </div>
+        )
+      )}
+    </div>
   );
-};
+}
 
-export default DataGridCustomToolbar;
+export default Applications;
