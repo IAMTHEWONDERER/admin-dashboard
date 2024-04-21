@@ -11,6 +11,8 @@ import managementRoutes from "./routes/management.js";
 import salesRoutes from "./routes/sales.js";
 
 // data imports
+import applicationRoutes from './routes/applicationRoutes.js';
+
 import User from "./models/User.js";
 import Product from "./models/Product.js";
 import ProductStat from "./models/ProductStat.js";
@@ -42,6 +44,7 @@ app.use("/client", clientRoutes);
 app.use("/general", generalRoutes);
 app.use("/management", managementRoutes);
 app.use("/sales", salesRoutes);
+app.use('/api', applicationRoutes);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 9000;

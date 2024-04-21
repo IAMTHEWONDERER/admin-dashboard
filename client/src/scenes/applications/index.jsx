@@ -12,8 +12,9 @@ function Applications() {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/applications');
+        const response = await axios.get('http://localhost:5001/api/applications');
         const pendingApplications = response.data.filter(app => app.status === 'pending');
+        console.log(pendingApplications)
         setApplications(pendingApplications);
         setLoading(false);
         if (pendingApplications.length === 0) {
@@ -29,7 +30,7 @@ function Applications() {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      await axios.patch(`http://localhost:5000/applications/${id}`, { status: newStatus });
+      await axios.patch(`http://localhost:5001/api/applications/${id}`, { status: newStatus });
       moveNextApplication();
     } catch (error) {
       console.error('Error updating status:', error);
@@ -93,10 +94,10 @@ function Applications() {
               }}
             />
             <br />
-            <button onClick={() => handleStatusChange(currentApplication.id, 'approved')}>
+            <button onClick={() => handleStatusChange(currentApplication._id, 'approved')}>
               Approve
             </button>
-            <button onClick={() => handleStatusChange(currentApplication.id, 'declined')}>
+            <button onClick={() => handleStatusChange(currentApplication._id, 'declined')}>
               Decline
             </button>
           </div>
