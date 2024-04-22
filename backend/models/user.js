@@ -96,7 +96,6 @@ const userSchema = new Schema({
       delete ret.password;
       delete ret.__v;
       delete ret.updatedAt;
-      delete ret.flag_system;
       delete ret.role;
       delete ret.bank_details;
       delete ret.card;

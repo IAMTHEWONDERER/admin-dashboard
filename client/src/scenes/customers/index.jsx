@@ -11,12 +11,42 @@ const Customers = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
 
-  const handleBanClick = (customerId) => {
+  const handleBanClick = async (customerId) => {
     console.log(`Banning customer with ID ${customerId}`);
-  };
+    try {
+      const response = await axios.patch(`http://localhost:3111/users/banuser/${customerId}`, {
+        flag_system: "banned",
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }});
 
-  const handleDeleteClick = (customerId) => {
+      console.log("Response:", response.data); // Log the response data
+      const updatedUser = response.data;  
+      const updatedUsers = users.map(user =>
+        user._id === updatedUser._id ? updatedUser : user
+      );
+      setUsers(updatedUsers);
+      setFilteredUsers(updatedUsers);
+    } catch (error) {
+      console.error("Error banning user:", error);
+      console.log("Error response:", error.response); // Log the error response if available
+    }
+  };
+  
+
+  const handleDeleteClick = async (customerId) => {
     console.log(`Deleting customer with ID ${customerId}`);
+    try {
+      // Send DELETE request to your backend API
+      await axios.delete(`http://localhost:3111/users/delete/${customerId}`);
+      // Remove the deleted user from the users state
+      const updatedUsers = users.filter(user => user._id !== customerId);
+      setUsers(updatedUsers);
+      setFilteredUsers(updatedUsers); // Update filteredUsers as well
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
   };
 
   const handleSearchChange = (event) => {
@@ -26,7 +56,8 @@ const Customers = () => {
       (user) =>
         user._id.toLowerCase().includes(searchText) ||
         user.email.toLowerCase().includes(searchText) ||
-        user.fullname.toLowerCase().includes(searchText)
+        user.fullname.toLowerCase().includes(searchText) ||
+        user.flag_system.toLowerCase().includes(searchText)
     );
     setFilteredUsers(filteredUsers);
   };
@@ -45,6 +76,7 @@ const Customers = () => {
     { field: "_id", headerName: "ID", flex: 1 },
     { field: "fullname", headerName: "Full Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
+    { field: "flag_system", headerName: "Status", flex: 1 },
     {
       field: "actions",
       headerName: "Actions",

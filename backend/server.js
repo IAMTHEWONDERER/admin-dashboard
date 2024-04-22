@@ -19,7 +19,13 @@ const swaggerUi = require('swagger-ui-express');
 const specs = require('../backend/middlewares/swagger');
 const cors = require('cors');
 
+expressBusboy.extend(App, {
+    upload: true,  
+    path: './uploads' 
+  });
 
+
+App.use(express.json());
 App.use(cors());
 App.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 App.use('/users', userroutes);
