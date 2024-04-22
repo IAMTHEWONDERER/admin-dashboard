@@ -1,15 +1,15 @@
 import Product from "../models/Product.js";
-import ProductStat from "../models/ProductStat.js";
+import productstat from "../models/productstat.js";
 import User from "../models/User.js";
 import Transaction from "../models/Transaction.js";
 
-export const getProducts = async (req, res) => {
+export const getproducts = async (req, res) => {
   try {
     const products = await Product.find();
 
     const productsWithStats = await Promise.all(
       products.map(async (product) => {
-        const stat = await ProductStat.find({
+        const stat = await productstat.find({
           productId: product._id,
         });
         return {

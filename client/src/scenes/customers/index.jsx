@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, useTheme } from "@mui/material";
+import { Box, Button, useTheme } from "@mui/material";
 import { useGetCustomersQuery } from "state/api";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
@@ -8,6 +8,16 @@ const Customers = () => {
   const theme = useTheme();
   const { data, isLoading } = useGetCustomersQuery();
   console.log("data", data);
+
+  const handleBanClick = (customerId) => {
+    // Implement your ban logic here
+    console.log(`Banning customer with ID ${customerId}`);
+  };
+
+  const handleDeleteClick = (customerId) => {
+    // Implement your delete logic here
+    console.log(`Deleting customer with ID ${customerId}`);
+  };
 
   const columns = [
     {
@@ -26,27 +36,14 @@ const Customers = () => {
       flex: 1,
     },
     {
-      field: "phoneNumber",
-      headerName: "Phone Number",
-      flex: 0.5,
-      renderCell: (params) => {
-        return params.value.replace(/^(\d{3})(\d{3})(\d{4})/, "($1)$2-$3");
-      },
-    },
-    {
-      field: "status",
-      headerName: "status",
-      flex: 0.4,
-    },
-    {
-      field: "occupation",
-      headerName: "Occupation",
+      field: "Ban",
+      headerName: "Ban",
       flex: 1,
     },
     {
-      field: "role",
-      headerName: "Role",
-      flex: 0.5,
+      field: "Delete",
+      headerName: "Delete",
+      flex: 1,
     },
   ];
 

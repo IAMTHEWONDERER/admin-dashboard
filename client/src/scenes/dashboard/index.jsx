@@ -44,7 +44,7 @@ const Dashboard = () => {
     },
     {
       field: "products",
-      headerName: "# of Products",
+      headerName: "# of products",
       flex: 0.5,
       sortable: false,
       renderCell: (params) => params.value.length,

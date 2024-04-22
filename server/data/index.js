@@ -2538,7 +2538,7 @@ export const dataProduct = [
   },
 ];
 
-export const dataProductStat = [
+export const dataproductstat = [
   {
     _id: "6371259df03239e680000035",
     productId: "63701d24f03239c72c00018e",

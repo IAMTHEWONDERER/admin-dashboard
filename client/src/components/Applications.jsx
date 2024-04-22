@@ -40,7 +40,7 @@ function Applications() {
 
   return (
     <div>
-      <Typography variant="h4">Applicant Information</Typography>
+      <Typography variant="h4"> Applicant Information</Typography>
       <Grid container spacing={0.5}>
         {Object.entries(formData).map(([key, value]) => (
           <React.Fragment key={key}>
