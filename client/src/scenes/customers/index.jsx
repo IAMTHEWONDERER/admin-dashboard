@@ -1,40 +1,50 @@
-import React from "react";
-import { Box, Button, useTheme } from "@mui/material";
-import { useGetCustomersQuery } from "state/api";
+import React, { useState, useEffect } from "react";
+import { Box, Button, TextField, useTheme } from "@mui/material";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
+import axios from 'axios';
 
 const Customers = () => {
   const theme = useTheme();
-  const { data, isLoading } = useGetCustomersQuery();
-  console.log("data", data);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchText, setSearchText] = useState("");
+  const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   const handleBanClick = (customerId) => {
-    // Implement your ban logic here
     console.log(`Banning customer with ID ${customerId}`);
   };
 
   const handleDeleteClick = (customerId) => {
-    // Implement your delete logic here
     console.log(`Deleting customer with ID ${customerId}`);
   };
 
+  const handleSearchChange = (event) => {
+    const searchText = event.target.value.toLowerCase();
+    setSearchText(searchText);
+    const filteredUsers = users.filter(
+      (user) =>
+        user._id.toLowerCase().includes(searchText) ||
+        user.email.toLowerCase().includes(searchText) ||
+        user.fullname.toLowerCase().includes(searchText)
+    );
+    setFilteredUsers(filteredUsers);
+  };
+
+  useEffect(() => {
+    axios.get("http://localhost:3111/users/getall")
+      .then(response => {
+        setUsers(response.data);
+        setFilteredUsers(response.data); // Initialize filteredUsers with all users
+      })
+      .catch(err => console.log(err))
+      .finally(() => setIsLoading(false));
+  }, []);
+
   const columns = [
-    {
-      field: "_id",
-      headerName: "ID",
-      flex: 1,
-    },
-    {
-      field: "name",
-      headerName: "Name",
-      flex: 0.5,
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      flex: 1,
-    },
+    { field: "_id", headerName: "ID", flex: 1 },
+    { field: "fullname", headerName: "Full Name", flex: 1 },
+    { field: "email", headerName: "Email", flex: 1 },
     {
       field: "actions",
       headerName: "Actions",
@@ -48,7 +58,7 @@ const Customers = () => {
           >
             Ban
           </Button>
-          <Box mx={8} />
+          <Box mx={3} />
           <Button
             variant="contained"
             color="error"
@@ -59,7 +69,7 @@ const Customers = () => {
         </Box>
       ),
     },
-  ];  
+  ];
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -68,12 +78,8 @@ const Customers = () => {
         mt="40px"
         height="75vh"
         sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-          },
+          "& .MuiDataGrid-root": { border: "none" },
+          "& .MuiDataGrid-cell": { borderBottom: "none" },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,
             color: theme.palette.secondary[100],
@@ -92,11 +98,19 @@ const Customers = () => {
           },
         }}
       >
+        <TextField
+          label="Search"
+          variant="outlined"
+          value={searchText}
+          onChange={handleSearchChange}
+          fullWidth
+          sx={{ mb: 2 }}
+        />
         <DataGrid
-          loading={isLoading || !data}
-          getRowId={(row) => row._id}
-          rows={data || []}
+          loading={isLoading}
+          rows={filteredUsers}
           columns={columns}
+          getRowId={(row) => row._id} // Specify the unique ID for rows
         />
       </Box>
     </Box>
