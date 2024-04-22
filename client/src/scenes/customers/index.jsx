@@ -36,16 +36,30 @@ const Customers = () => {
       flex: 1,
     },
     {
-      field: "Ban",
-      headerName: "Ban",
+      field: "actions",
+      headerName: "Actions",
       flex: 1,
+      renderCell: (params) => (
+        <Box mx={2} display="flex" alignItems="center" justifyContent="space-between">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleBanClick(params.row._id)}
+          >
+            Ban
+          </Button>
+          <Box mx={8} />
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => handleDeleteClick(params.row._id)}
+          >
+            Delete
+          </Button>
+        </Box>
+      ),
     },
-    {
-      field: "Delete",
-      headerName: "Delete",
-      flex: 1,
-    },
-  ];
+  ];  
 
   return (
     <Box m="1.5rem 2.5rem">
