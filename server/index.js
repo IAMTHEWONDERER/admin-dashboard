@@ -15,14 +15,14 @@ import applicationRoutes from './routes/applicationRoutes.js';
 
 import User from "./models/User.js";
 import Product from "./models/Product.js";
-import productstat from "./models/productstat.js";
+import Productstat from "./models/Productstat.js";
 import Transaction from "./models/Transaction.js";
 import OverallStat from "./models/OverallStat.js";
 import AffiliateStat from "./models/AffiliateStat.js";
 import {
   dataUser,
   dataProduct,
-  dataproductstat,
+  dataProductstat,
   dataTransaction,
   dataOverallStat,
   dataAffiliateStat,

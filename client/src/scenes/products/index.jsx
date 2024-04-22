@@ -1,139 +1,93 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  Collapse,
-  Button,
-  Typography,
-  Rating,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, TextField, useTheme } from "@mui/material";
 import Header from "components/Header";
-import { useGetproductsQuery } from "state/api";
+import { DataGrid } from "@mui/x-data-grid";
+import axios from 'axios';
 
-const Product = ({
-  _id,
-  name,
-  description,
-  price,
-  rating,
-  category,
-  supply,
-  stat,
-}) => {
+const Customers = () => {
   const theme = useTheme();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchText, setSearchText] = useState("");
+  const [coaches, setCoaches] = useState([]);
+  const [filteredCoaches, setFilteredCoaches] = useState([]);
 
-  return (
-    <Card
-      sx={{
-        backgroundImage: "none",
-        backgroundColor: theme.palette.background.alt,
-        borderRadius: "0.55rem",
-      }}
-    >
-      <CardContent>
-        <Typography
-          sx={{ fontSize: 14 }}
-          color={theme.palette.secondary[700]}
-          gutterBottom
-        >
-          {category}
-        </Typography>
-        <Typography variant="h5" component="div">
-          {name}
-        </Typography>
-        <Typography sx={{ mb: "1.5rem" }} color={theme.palette.secondary[400]}>
-          ${Number(price).toFixed(2)}
-        </Typography>
-        <Rating value={rating} readOnly />
+  const handleSearchChange = (event) => {
+    const searchText = event.target.value.toLowerCase();
+    setSearchText(searchText);
+    const filteredCoaches = coaches.filter(
+      (coach) =>
+        coach._id.toLowerCase().includes(searchText) ||
+        coach.fullname.toLowerCase().includes(searchText) ||
+        coach.email.toLowerCase().includes(searchText) ||
+        coach.flag_system.toLowerCase().includes(searchText)
+    );
+    setFilteredCoaches(filteredCoaches);
+  };
 
-        <Typography variant="body2">{description}</Typography>
-      </CardContent>
-      <CardActions>
-        <Button
-          variant="primary"
-          size="small"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          See More
-        </Button>
-      </CardActions>
-      <Collapse
-        in={isExpanded}
-        timeout="auto"
-        unmountOnExit
-        sx={{
-          color: theme.palette.neutral[300],
-        }}
-      >
-        <CardContent>
-          <Typography>id: {_id}</Typography>
-          <Typography>Supply Left: {supply}</Typography>
-          <Typography>
-            Yearly Sales This Year: {stat.yearlySalesTotal}
-          </Typography>
-          <Typography>
-            Yearly Units Sold This Year: {stat.yearlyTotalSoldUnits}
-          </Typography>
-        </CardContent>
-      </Collapse>
-    </Card>
-  );
-};
+  useEffect(() => {
+    axios.get("http://localhost:3111/coaches/getallcoaches")
+      .then(response => {
+        console.log("Raw data from server:", response.data); // Log the raw data from the server
+        setCoaches(response.data);
+        setFilteredCoaches(response.data);
+      })
+      .catch(err => console.log(err))
+      .finally(() => setIsLoading(false));
+  }, []);
+  
 
-const products = () => {
-  const { data, isLoading } = useGetproductsQuery();
-  const isNonMobile = useMediaQuery("(min-width: 1000px)");
+  const columns = [
+    { field: "_id", headerName: "ID", flex: 1 },
+    { field: "fullname", headerName: "Full Name", flex: 1 },
+    { field: "email", headerName: "Email", flex: 1 },
+    { field: "flag_system", headerName: "Status", flex: 1 },
+  ];
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="products" subtitle="See your list of products." />
-      {data && !isLoading ? (
-        <Box
-          mt="20px"
-          display="grid"
-          gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-          justifyContent="space-between"
-          rowGap="20px"
-          columnGap="1.33%"
-          sx={{
-            "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-          }}
-        >
-          {data.map(
-            ({
-              _id,
-              name,
-              description,
-              price,
-              rating,
-              category,
-              supply,
-              stat,
-            }) => (
-              <Product
-                key={_id}
-                _id={_id}
-                name={name}
-                description={description}
-                price={price}
-                rating={rating}
-                category={category}
-                supply={supply}
-                stat={stat}
-              />
-            )
-          )}
-        </Box>
-      ) : (
-        <>Loading...</>
-      )}
+      <Header title="CUSTOMERS" subtitle="List of Customers" />
+      <Box
+        mt="40px"
+        height="75vh"
+        sx={{
+          "& .MuiDataGrid-root": { border: "none" },
+          "& .MuiDataGrid-cell": { borderBottom: "none" },
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: theme.palette.background.alt,
+            color: theme.palette.secondary[100],
+            borderBottom: "none",
+          },
+          "& .MuiDataGrid-virtualScroller": {
+            backgroundColor: theme.palette.primary.light,
+          },
+          "& .MuiDataGrid-footerContainer": {
+            backgroundColor: theme.palette.background.alt,
+            color: theme.palette.secondary[100],
+            borderTop: "none",
+          },
+          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+            color: `${theme.palette.secondary[200]} !important`,
+          },
+        }}
+      >
+        <TextField
+          label="Search"
+          variant="outlined"
+          value={searchText}
+          onChange={handleSearchChange}
+          fullWidth
+          sx={{ mb: 2 }}
+        />
+        <DataGrid
+          loading={isLoading}
+          rows={filteredCoaches}
+          columns={columns}
+          getRowId={(row) => row._id}
+          
+        />
+      </Box>
     </Box>
   );
 };
 
-export default products;
+export default Customers;

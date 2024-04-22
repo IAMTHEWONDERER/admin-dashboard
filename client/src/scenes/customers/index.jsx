@@ -79,7 +79,7 @@ const Customers = () => {
     { field: "flag_system", headerName: "Status", flex: 1 },
     {
       field: "actions",
-      headerName: "Actions",
+      headerName: "",
       flex: 1,
       renderCell: (params) => (
         <Box mx={2} display="flex" alignItems="center" justifyContent="space-between">

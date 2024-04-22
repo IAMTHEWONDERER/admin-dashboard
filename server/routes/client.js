@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  getproducts,
+  getProducts,
   getCustomers,
   getTransactions,
   getApplications,
@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-router.get("/products", getproducts);
+router.get("/Products", getProducts);
 router.get("/customers", getCustomers);
 router.get("/transactions", getTransactions);
 router.get("/Applications", getApplications);

@@ -39,8 +39,8 @@ const Transactions = () => {
       flex: 1,
     },
     {
-      field: "products",
-      headerName: "# of products",
+      field: "Products",
+      headerName: "# of Products",
       flex: 0.5,
       sortable: false,
       renderCell: (params) => params.value.length,

@@ -1,15 +1,15 @@
 import Product from "../models/Product.js";
-import productstat from "../models/productstat.js";
+import Productstat from "../models/Productstat.js";
 import User from "../models/User.js";
 import Transaction from "../models/Transaction.js";
 
-export const getproducts = async (req, res) => {
+export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const Products = await Product.find();
 
-    const productsWithStats = await Promise.all(
-      products.map(async (product) => {
-        const stat = await productstat.find({
+    const ProductsWithStats = await Promise.all(
+      Products.map(async (product) => {
+        const stat = await Productstat.find({
           productId: product._id,
         });
         return {
@@ -19,7 +19,7 @@ export const getproducts = async (req, res) => {
       })
     );
 
-    res.status(200).json(productsWithStats);
+    res.status(200).json(ProductsWithStats);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
