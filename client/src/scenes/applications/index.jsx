@@ -57,54 +57,101 @@ function Applications() {
         <p>No more pending applications</p>
       ) : (
         currentApplication && (
-          <div>
-            <TextField
-              id="applicant-name"
-              label="Name"
-              value={currentApplication.name} // Use value instead of defaultValue
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <br />
-            <TextField
-              id="applicant-position"
-              label="Position"
-              value={currentApplication.position} // Use value instead of defaultValue
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <br />
-            <TextField
-              id="applicant-experience"
-              label="Experience"
-              value={currentApplication.experience} // Use value instead of defaultValue
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <br />
-            <TextField
-              id="applicant-status"
-              label="Status"
-              value={currentApplication.status} // Use value instead of defaultValue
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <br />
-            <button onClick={() => handleStatusChange(currentApplication._id, 'approved')}>
-              Approve
-            </button>
-            <button onClick={() => handleStatusChange(currentApplication._id, 'declined')}>
-              Decline
-            </button>
+          <div className='m-10 sm:grid sm:grid-cols-2 gap-4 w-full '>
+            <div>
+              <TextField
+                id="applicant-name"
+                label="First Name"
+                value={currentApplication.firstName} // Use value instead of defaultValue
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+            <div>
+              <TextField
+                id="applicant-name"
+                label="Last Name"
+                value={currentApplication.lastName} // Use value instead of defaultValue
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+            <div>
+              <TextField
+                id="applicant-name"
+                label="Email"
+                value={currentApplication.email} // Use value instead of defaultValue
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+            <div>
+              <TextField
+                id="applicant-name"
+                label="Age"
+                value={currentApplication.age} // Use value instead of defaultValue
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+            <div>
+              <TextField
+                id="applicant-name"
+                label="Address"
+                value={currentApplication.address} // Use value instead of defaultValue
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+            <div>
+              <TextField
+                id="applicant-name"
+                label="Phone Number"
+                value={currentApplication.phone} // Use value instead of defaultValue
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+            <div>
+              <TextField
+                id="applicant-position"
+                label="Preferred Coaching Style"
+                value={currentApplication.style} // Use value instead of defaultValue
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+            <div>
+              <TextField
+                id="applicant-experience"
+                label="Experience"
+                value={currentApplication.experience} // Use value instead of defaultValue
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+            <div className="col-span-2 flex justify-between">
+              <button onClick={() => handleStatusChange(currentApplication._id, 'approved')}>
+                Approve
+              </button>
+              <button onClick={() => handleStatusChange(currentApplication._id, 'declined')}>
+                Decline
+              </button>
+            </div>
           </div>
         )
       )}
     </div>
   );
+  
 }
 
 export default Applications;
