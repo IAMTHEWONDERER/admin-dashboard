@@ -14,16 +14,16 @@ const Products = () => {
   const handleDeleteClick = async (customerId) => {
     console.log(`Deleting customer with ID ${customerId}`);
     try {
-      // Send DELETE request to your backend API
       await axios.delete(`http://localhost:3111/coaches/deletecoach/${customerId}`);
-      // Remove the deleted user from the users state
-      const updatedUsers = users.filter(user => user._id !== customerId);
-      setUsers(updatedUsers);
-      setFilteredUsers(updatedUsers); // Update filteredUsers as well
+  
+      // Re-fetch data after successful deletion
+      const response = await axios.get("http://localhost:3111/coaches/getallcoaches");
+      setCoaches(response.data);
+      setFilteredCoaches(response.data);
     } catch (error) {
-      console.error("Error deleting user:", error);
+      console.error("Error deleting coach:", error);
     }
-};
+  };
 
 const handleSearchChange = (event) => {
   const searchText = event.target.value.toLowerCase();
