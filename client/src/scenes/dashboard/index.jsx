@@ -73,7 +73,7 @@ const Dashboard = () => {
       <FlexBetween>
           <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
         <Box display="flex" alignItems="center">
-        <Typography fontSize={"20px"} variant="h6">Welcome, {fullName}</Typography>
+        <Typography fontSize={"21px"} variant="h6">Welcome, {fullName}</Typography>
         </Box>
         <Box>
           <Button
