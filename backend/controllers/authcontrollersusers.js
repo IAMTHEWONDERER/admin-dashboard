@@ -133,7 +133,7 @@ loginUser = async (req, res) => {
 
     if (isMatch) {
       const payload = { id: user.id, name: user.name };
-      const token = await jwt.sign({ ...payload, role: user.role }, "secret", { expiresIn: "7d" });
+      const token = await jwt.sign({ ...payload, role: user.role, fullname: user.fullname }, "secret", { expiresIn: "7d" });
 
       res.json({ success: true, token: "Bearer " + token });
     } else {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
 import {
@@ -20,11 +20,22 @@ import BreakdownChart from "components/BreakdownChart";
 import OverviewChart from "components/OverviewChart";
 import { useGetDashboardQuery } from "state/api";
 import StatBox from "components/StatBox";
+import {jwtDecode} from 'jwt-decode';
+
 
 const Dashboard = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
   const { data, isLoading } = useGetDashboardQuery();
+  const [fullName, setFullName] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setFullName(decodedToken.fullname); // Update fullName state
+    }
+  }, []);
 
   const columns = [
     {
@@ -60,8 +71,10 @@ const Dashboard = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
-
+          <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        <Box display="flex" alignItems="center">
+        <Typography fontSize={"20px"} variant="h6">Welcome, {fullName}</Typography>
+        </Box>
         <Box>
           <Button
             sx={{

@@ -13,7 +13,6 @@ const Customers = () => {
 
 
   const handleBanClick = async (customerId) => {
-
     console.log(`Banning customer with ID ${customerId}`);
     try {
       const response = await axios.patch(`http://localhost:3111/users/banuser/${customerId}`, {
@@ -21,20 +20,25 @@ const Customers = () => {
       }, {
         headers: {
           'Content-Type': 'application/json'
-        }});
-
-      console.log("Response:", response.data); 
-      const updatedUser = response.data;  
-      const updatedUsers = users.map(user =>
+        }
+      });
+  
+      console.log("Response:", response.data);
+      const updatedUser = response.data;
+  
+      // Update the user's status in the local state
+      setUsers(users.map(user =>
         user._id === updatedUser._id ? updatedUser : user
-      );
-      setUsers(updatedUsers);
-      setFilteredUsers(updatedUsers);
+      ));
+      setFilteredUsers(filteredUsers.map(user =>
+        user._id === updatedUser._id ? updatedUser : user
+      ));
     } catch (error) {
       console.error("Error banning user:", error);
       console.log("Error response:", error.response);
     }
   };
+  
   
 
   const handleDeleteClick = async (customerId) => {

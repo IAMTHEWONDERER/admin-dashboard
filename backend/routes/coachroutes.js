@@ -12,6 +12,7 @@ coachroutes.get('/getallcoaches', coachcontrollers.getAllCoaches);
 coachroutes.get('/getcoach/:id', isAuthenticated, coachcontrollers.getCoachById);
 coachroutes.get('/filtercoach', isAuthenticated, checkUserAdmin , coachcontrollers.getCoachByFilter);
 coachroutes.put('/putcoach/:id', isAuthenticated, createCoachValidationRules(), validate , checkCoachAdmin , coachcontrollers.updateCoachById);
+coachroutes.patch('/bancoach/:id', coachcontrollers.bancoachById);
 coachroutes.delete('/deletecoach/:id',  coachcontrollers.deleteCoachById);
 
 

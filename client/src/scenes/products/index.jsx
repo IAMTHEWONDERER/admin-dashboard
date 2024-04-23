@@ -11,28 +11,32 @@ const Products = () => {
   const [coaches, setCoaches] = useState([]);
   const [filteredCoaches, setFilteredCoaches] = useState([]);
 
-  const handleBanClick = async (customerId) => {
-    console.log(`Banning customer with ID ${customerId}`);
+  const handleBanClick = async (coachId) => {
+    console.log(`Banning coach with ID ${coachId}`);
     try {
-      const response = await axios.patch(`http://localhost:3111/users/banuser/${customerId}`, {
+      const response = await axios.patch(`http://localhost:3111/coaches/bancoach/${coachId}`, {
         flag_system: "banned",
       }, {
         headers: {
           'Content-Type': 'application/json'
-        }});
-
-      console.log("Response:", response.data); // Log the response data
-      const updatedUser = response.data;  
-      const updatedUsers = users.map(user =>
-        user._id === updatedUser._id ? updatedUser : user
+        }
+      });
+  
+      console.log("Response:", response.data);
+      const updatedCoach = response.data;
+  
+      // Update the coach's status in the local state
+      const updatedCoaches = coaches.map(coach =>
+        coach._id === updatedCoach._id ? updatedCoach : coach
       );
-      setUsers(updatedUsers);
-      setFilteredUsers(updatedUsers);
+      setCoaches(updatedCoaches);
+      setFilteredCoaches(updatedCoaches);
     } catch (error) {
-      console.error("Error banning user:", error);
-      console.log("Error response:", error.response); // Log the error response if available
+      console.error("Error banning coach:", error);
+      console.log("Error response:", error.response);
     }
   };
+  
 
   const handleDeleteClick = async (customerId) => {
     console.log(`Deleting customer with ID ${customerId}`);
@@ -84,13 +88,13 @@ const columns = [
     flex: 1,
     renderCell: (params) => (
       <Box mx={2} display="flex" alignItems="center" justifyContent="space-between">
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleBanClick(params.row._id)}
-        >
-          Ban
-        </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleBanClick(params.row._id)}
+          >
+            Ban
+          </Button>
         <Box mx={3} />
         <Button
           variant="contained"
