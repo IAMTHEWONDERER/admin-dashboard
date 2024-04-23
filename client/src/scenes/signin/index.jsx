@@ -20,6 +20,16 @@ function SignIn() {
   const [error, setError] = useState('');
   let navigate = useNavigate();
 
+
+  const handleClose = () => {
+    // Delete token from local storage
+    localStorage.removeItem('token');
+    // Redirect to sign-in page
+    history.push('/signin');
+    // Close the menu
+    setAnchorEl(null);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);

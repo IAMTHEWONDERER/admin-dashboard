@@ -9,7 +9,7 @@ import {
 } from "@mui/icons-material";
 import FlexBetween from "components/FlexBetween";
 import { useDispatch } from "react-redux";
-import { setMode } from "state";
+import { setMode } from "state"; 
 import profileImage from "assets/profile.jpeg";
 import {
   AppBar,
@@ -21,17 +21,26 @@ import {
   Toolbar,
   Menu,
   MenuItem,
-  useTheme,
+  useTheme, 
 } from "@mui/material";
+
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
+  let navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const isOpen = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
+
+  const handleLogout = () => {
+    
+    localStorage.removeItem("token"); // Remove token from local storage
+    navigate("/signin"); // Redirect to signin page using useNavigate
+  };
 
   return (
     <AppBar
@@ -104,6 +113,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
                   fontSize="0.75rem"
                   sx={{ color: theme.palette.secondary[200] }}
                 >
+                  {/* Add user role or info here if needed */}
                 </Typography>
               </Box>
               <ArrowDropDownOutlined
@@ -116,7 +126,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
               onClose={handleClose}
               anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
-              <MenuItem onClick={handleClose}>Log Out</MenuItem>
+              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
             </Menu>
           </FlexBetween>
         </FlexBetween>
