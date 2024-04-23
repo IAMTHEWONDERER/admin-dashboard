@@ -392,7 +392,7 @@ const updateuserById = async (req, res) => {
 
 const banuserById = async (req, res) => {
     const userId = req.params.id;
-  
+    console.log(req.body);
     try {
       // Find the user by ID
       const user = await User.findById(userId);
@@ -406,7 +406,8 @@ const banuserById = async (req, res) => {
   
       // Save the updated user
       const updatedUser = await user.save();
-  
+      console.log("Updated user:", updatedUser);
+
       // Send back the updated user data in the response
       res.status(200).json(updatedUser);
     } catch (error) {

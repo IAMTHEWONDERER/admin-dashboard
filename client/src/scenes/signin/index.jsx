@@ -13,33 +13,38 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 function SignIn() {
   const [error, setError] = useState('');
-  const history = useNavigate();
+  let navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get('email');
     const password = data.get('password');
-
+  
     try {
-      const response = await fetch('http://localhost:5001/signin', {
+      const response = await fetch('http://localhost:3111/api/loginuser', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
       });
-
+  
       if (response.ok) {
-        history.push('/dashboard'); // Redirect to admin dashboard if authentication successful
+        const responseData = await response.json();
+        const token = responseData.token;
+        localStorage.setItem('token', token);
+        navigate('/dashboard');  
       } else {
         setError('Invalid email or password');
       }
     } catch (error) {
-      setError('An error occurred. Please try again later.');
+      setError('An error occurred. Please try again later');
     }
   };
 

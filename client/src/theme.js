@@ -115,7 +115,7 @@
       },
       typography: {
         fontFamily: ["Koulen", "sans-serif"].join(","),
-        fontSize: 12,
+        fontSize: 14,
         h1: {
           fontFamily: ["Koulen", "sans-serif"].join(","),
           fontSize: 40,

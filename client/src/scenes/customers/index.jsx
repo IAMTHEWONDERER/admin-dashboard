@@ -11,7 +11,9 @@ const Customers = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
 
+
   const handleBanClick = async (customerId) => {
+
     console.log(`Banning customer with ID ${customerId}`);
     try {
       const response = await axios.patch(`http://localhost:3111/users/banuser/${customerId}`, {
@@ -21,7 +23,7 @@ const Customers = () => {
           'Content-Type': 'application/json'
         }});
 
-      console.log("Response:", response.data); // Log the response data
+      console.log("Response:", response.data); 
       const updatedUser = response.data;  
       const updatedUsers = users.map(user =>
         user._id === updatedUser._id ? updatedUser : user
@@ -30,7 +32,7 @@ const Customers = () => {
       setFilteredUsers(updatedUsers);
     } catch (error) {
       console.error("Error banning user:", error);
-      console.log("Error response:", error.response); // Log the error response if available
+      console.log("Error response:", error.response);
     }
   };
   
@@ -105,7 +107,7 @@ const Customers = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="CUSTOMERS" subtitle="List of Customers" />
+      <Header title="USERS" subtitle="List of Users" />
       <Box
         mt="40px"
         height="75vh"

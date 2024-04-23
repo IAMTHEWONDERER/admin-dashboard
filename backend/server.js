@@ -4,10 +4,11 @@ const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const specs = require('../backend/middlewares/swagger');
-const expressBusboy = require('express-busboy');
+
 
 const App = express();
 const port = 3111;
+
 
 const authroutesuser = require("../backend/routes/authroutesuser");
 const authroutescoach = require("../backend/routes/authroutescoach");
@@ -20,11 +21,6 @@ const reportRoute = require('../backend/routes/reportroutes');
 const messageRoute = require('../backend/routes/messageRoute');
 const { app, server } = require("../backend/utils/socket");
 
-// Extend Express app with busboy for file uploads
-expressBusboy.extend(App, {
-  upload: true,
-  path: './uploads'
-});
 
 // Middleware
 App.use(cors());

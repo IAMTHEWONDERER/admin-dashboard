@@ -44,3 +44,6 @@ export const updateApplicationStatus = async (req, res) => {
     res.status(500).json({ error: 'Internal server error app controller update' });
   }
 };
+
+
+
