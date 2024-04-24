@@ -89,13 +89,13 @@ const Customers = () => {
       flex: 1,
       renderCell: (params) => (
         <Box mx={2} display="flex" alignItems="center" justifyContent="space-between">
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleBanClick(params.row._id)}
-          >
-            Ban
-          </Button>
+        <Button
+          variant="contained"
+          color={params.row.flag_system === "banned" ? "primary" : "primary"}
+          onClick={() => handleBanClick(params.row._id)}
+        >
+          {params.row.flag_system === "banned" ? "Unban" : "Ban"}
+        </Button>
           <Box mx={3} />
           <Button
             variant="contained"

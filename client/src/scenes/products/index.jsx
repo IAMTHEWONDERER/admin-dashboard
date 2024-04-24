@@ -16,32 +16,35 @@ const Products = () => {
   const [filteredCoaches, setFilteredCoaches] = useState([]);
 
   const handleBanClick = async (coachId) => {
-    console.log(`Banning coach with ID ${coachId}`);
+    console.log(`Toggling ban status for coach with ID ${coachId}`);
     try {
-      const response = await axios.patch(`http://localhost:3111/coaches/bancoach/${coachId}`, {
-        flag_system: "banned",
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
+      const response = await axios.patch(
+        `http://localhost:3111/coaches/bancoach/${coachId}`,
+        {
+          flag_system: "banned", // Toggle between "banned" and "active" based on current status
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
-      });
+      );
   
       console.log("Response:", response.data);
       const updatedCoach = response.data;
   
       // Update the coach's status in the local state
-      const updatedCoaches = coaches.map(coach =>
+      const updatedCoaches = coaches.map((coach) =>
         coach._id === updatedCoach._id ? updatedCoach : coach
       );
       setCoaches(updatedCoaches);
       setFilteredCoaches(updatedCoaches);
     } catch (error) {
-      console.error("Error banning coach:", error);
+      console.error("Error toggling ban status for coach:", error);
       console.log("Error response:", error.response);
     }
   };
   
-
   const handleDeleteClick = async (customerId) => {
     console.log(`Deleting customer with ID ${customerId}`);
     try {
@@ -103,13 +106,13 @@ const columns = [
     flex: 1,
     renderCell: (params) => (
       <Box mx={2} display="flex" alignItems="center" justifyContent="space-between">
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleBanClick(params.row._id)}
-          >
-            Ban
-          </Button>
+        <Button
+          variant="contained"
+          color={params.row.flag_system === "banned" ? "primary" : "primary"}
+          onClick={() => handleBanClick(params.row._id)}
+        >
+          {params.row.flag_system === "banned" ? "Unban" : "Ban"}
+        </Button>
         <Box mx={3} />
         <Button
           variant="contained"
