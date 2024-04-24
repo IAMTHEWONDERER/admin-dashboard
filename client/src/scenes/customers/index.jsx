@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, useTheme } from "@mui/material";
+import { Box, Button, TextField, Snackbar, useTheme } from "@mui/material";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from 'axios';
-import {jwtDecode} from 'jwt-decode';
 
 const Customers = () => {
   const theme = useTheme();
@@ -13,6 +12,8 @@ const Customers = () => {
   const [searchText, setSearchText] = useState("");
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -23,33 +24,52 @@ const Customers = () => {
 
 
   const handleBanClick = async (customerId) => {
-    console.log(`Banning customer with ID ${customerId}`);
+    console.log(`Toggling ban status for customer with ID ${customerId}`);
     try {
-      const response = await axios.patch(`http://localhost:3111/users/banuser/${customerId}`, {
-        flag_system: "banned",
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
+      const response = await axios.patch(
+        `http://localhost:3111/users/banuser/${customerId}`,
+        {
+          flag_system: "banned", // Assuming this endpoint toggles the ban status
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
-      });
+      );
   
       console.log("Response:", response.data);
       const updatedUser = response.data;
   
       // Update the user's status in the local state
-      setUsers(users.map(user =>
+      setUsers(users.map((user) =>
         user._id === updatedUser._id ? updatedUser : user
       ));
-      setFilteredUsers(filteredUsers.map(user =>
+      setFilteredUsers(filteredUsers.map((user) =>
         user._id === updatedUser._id ? updatedUser : user
       ));
+  
+      // Determine the snackbar message based on the updated user's ban status
+      const snackbarMessage = updatedUser.flag_system === "banned"
+        ? `User with ID ${customerId} successfully banned`
+        : `User with ID ${customerId} successfully unbanned`;
+  
+      // Show snackbar with the determined message
+      setSnackbarMessage(snackbarMessage);
+      setSnackbarOpen(true);
     } catch (error) {
-      console.error("Error banning user:", error);
+      console.error("Error toggling ban status:", error);
       console.log("Error response:", error.response);
     }
   };
   
-  
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
 
   const handleDeleteClick = async (customerId) => {
     console.log(`Deleting customer with ID ${customerId}`);
@@ -159,6 +179,12 @@ const Customers = () => {
           rows={filteredUsers}
           columns={columns}
           getRowId={(row) => row._id} // Specify the unique ID for rows
+        />
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000} 
+          onClose={handleSnackbarClose}
+          message={snackbarMessage}
         />
       </Box>
     </Box>

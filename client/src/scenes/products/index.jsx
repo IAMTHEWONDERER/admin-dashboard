@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, useTheme } from "@mui/material";
+import { Box, Button, TextField, Snackbar, useTheme } from "@mui/material";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from 'axios';
@@ -14,14 +14,18 @@ const Products = () => {
   const [coaches, setCoaches] = useState([]);
   const [fullName, setFullName] = useState("");
   const [filteredCoaches, setFilteredCoaches] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");  
 
   const handleBanClick = async (coachId) => {
     console.log(`Toggling ban status for coach with ID ${coachId}`);
     try {
+      // Make a PATCH request to toggle the coach's ban status
       const response = await axios.patch(
         `http://localhost:3111/coaches/bancoach/${coachId}`,
         {
-          flag_system: "banned", // Toggle between "banned" and "active" based on current status
+          // Toggle between "banned" and "active" based on the current status
+          flag_system: "banned", // Assuming this endpoint toggles the ban status
         },
         {
           headers: {
@@ -39,11 +43,28 @@ const Products = () => {
       );
       setCoaches(updatedCoaches);
       setFilteredCoaches(updatedCoaches);
+  
+      // Determine the snackbar message based on the updated coach's ban status
+      const snackbarMessage = updatedCoach.flag_system === "banned"
+        ? `Coach with ID ${coachId} successfully banned`
+        : `Coach with ID ${coachId} successfully unbanned`;
+  
+      // Show snackbar with the determined message
+      setSnackbarMessage(snackbarMessage);
+      setSnackbarOpen(true);
     } catch (error) {
       console.error("Error toggling ban status for coach:", error);
       console.log("Error response:", error.response);
     }
   };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+  
   
   const handleDeleteClick = async (customerId) => {
     console.log(`Deleting customer with ID ${customerId}`);
@@ -167,7 +188,12 @@ return (
         columns={columns}
         getRowId={(row) => row._id || Math.random()}
       />
-
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+      />
     </Box>
   </Box>
 );
