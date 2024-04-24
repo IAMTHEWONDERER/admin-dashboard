@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
 import {
@@ -22,8 +23,8 @@ import { useGetDashboardQuery } from "state/api";
 import StatBox from "components/StatBox";
 import {jwtDecode} from 'jwt-decode';
 
-
 const Dashboard = () => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
   const { data, isLoading } = useGetDashboardQuery();
@@ -34,8 +35,11 @@ const Dashboard = () => {
     if (token) {
       const decodedToken = jwtDecode(token);
       setFullName(decodedToken.fullname); // Update fullName state
+    } else {
+      // Redirect to sign-in if no token is present
+      navigate("/signin");
     }
-  }, []);
+  }, [navigate]);
 
   const columns = [
     {
