@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   LightModeOutlined,
   DarkModeOutlined,
@@ -26,21 +26,28 @@ import {
 
 import { useNavigate } from 'react-router-dom';
 
-const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
+  const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
   let navigate = useNavigate();
-
   const [anchorEl, setAnchorEl] = useState(null);
   const isOpen = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
-
   const handleLogout = () => {
     
-    localStorage.removeItem("token"); // Remove token from local storage
-    navigate("/signin"); // Redirect to signin page using useNavigate
+    localStorage.removeItem("token");
+    navigate("/signin");
   };
+
+  useEffect(() => {
+    // Retrieve the saved theme mode from localStorage
+    const savedMode = localStorage.getItem("themeMode");
+    if (savedMode) {
+      dispatch(setMode(savedMode)); // Set the theme mode based on the saved mode
+    }
+  }, [dispatch]);
+  
 
   return (
     <AppBar

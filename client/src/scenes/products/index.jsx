@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, useTheme } from "@mui/material";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from 'axios';
+import {jwtDecode} from 'jwt-decode';
 
 const Products = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [coaches, setCoaches] = useState([]);
+  const [fullName, setFullName] = useState("");
   const [filteredCoaches, setFilteredCoaches] = useState([]);
 
   const handleBanClick = async (coachId) => {
@@ -75,6 +79,17 @@ useEffect(() => {
     .catch(err => console.log(err))
     .finally(() => setIsLoading(false));
 }, []);
+
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    const decodedToken = jwtDecode(token);
+    setFullName(decodedToken.fullname); // Update fullName state
+  } else {
+    // Redirect to sign-in if no token is present
+    navigate("/signin");
+  }
+}, [navigate]);
 
 
 const columns = [
