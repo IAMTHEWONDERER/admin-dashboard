@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Snackbar, useTheme } from "@mui/material";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
+import ConfirmationDialog from "../../components/confirmation";
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
 
@@ -14,18 +15,39 @@ const Products = () => {
   const [coaches, setCoaches] = useState([]);
   const [fullName, setFullName] = useState("");
   const [filteredCoaches, setFilteredCoaches] = useState([]);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");  
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
+  const [selectedCoachId, setSelectedCoachId] = useState(null);
+  const [actionType, setActionType] = useState("");
 
-  const handleBanClick = async (coachId) => {
-    console.log(`Toggling ban status for coach with ID ${coachId}`);
+
+  const handleBanClick = (coachId) => {
+    setSelectedCoachId(coachId);
+    setActionType("ban"); // Set the action type for the confirmation dialog
+    setConfirmationOpen(true);
+  };
+
+  const handleDeleteClick = (coachId) => {
+    setSelectedCoachId(coachId);
+    setActionType("delete"); // Set the action type for the confirmation dialog
+    setConfirmationOpen(true);
+  };
+
+  const handleConfirmAction = async () => {
+    // Handle ban or delete action based on the actionType state
+    if (actionType === "ban") {
+      await banCoach(selectedCoachId);
+    } else if (actionType === "delete") {
+      await deleteCoach(selectedCoachId);
+    }
+    setConfirmationOpen(false); // Close the confirmation dialog
+  };
+
+  const banCoach = async (coachId) => {
     try {
-      // Make a PATCH request to toggle the coach's ban status
       const response = await axios.patch(
         `http://localhost:3111/coaches/bancoach/${coachId}`,
         {
-          // Toggle between "banned" and "active" based on the current status
-          flag_system: "banned", // Assuming this endpoint toggles the ban status
+          flag_system: "banned",
         },
         {
           headers: {
@@ -33,52 +55,44 @@ const Products = () => {
           },
         }
       );
-  
-      console.log("Response:", response.data);
+      console.log("Ban Coach Response:", response.data);
       const updatedCoach = response.data;
-  
-      // Update the coach's status in the local state
       const updatedCoaches = coaches.map((coach) =>
         coach._id === updatedCoach._id ? updatedCoach : coach
       );
       setCoaches(updatedCoaches);
       setFilteredCoaches(updatedCoaches);
-  
-      // Determine the snackbar message based on the updated coach's ban status
-      const snackbarMessage = updatedCoach.flag_system === "banned"
-        ? `Coach with ID ${coachId} successfully banned`
-        : `Coach with ID ${coachId} successfully unbanned`;
-  
-      // Show snackbar with the determined message
-      setSnackbarMessage(snackbarMessage);
-      setSnackbarOpen(true);
+      const confirmationMessage = `Coach with ID ${coachId} successfully banned`;
+      console.log(confirmationMessage);
     } catch (error) {
-      console.error("Error toggling ban status for coach:", error);
-      console.log("Error response:", error.response);
+      console.error("Error banning coach:", error);
     }
   };
 
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbarOpen(false);
-  };
-  
-  
-  const handleDeleteClick = async (customerId) => {
-    console.log(`Deleting customer with ID ${customerId}`);
+  const deleteCoach = async (coachId) => {
     try {
-      await axios.delete(`http://localhost:3111/coaches/deletecoach/${customerId}`);
-  
-      // Re-fetch data after successful deletion
-      const response = await axios.get("http://localhost:3111/coaches/getallcoaches");
-      setCoaches(response.data);
-      setFilteredCoaches(response.data);
+      await axios.delete(`http://localhost:3111/coaches/deletecoach/${coachId}`);
+      console.log(`Coach with ID ${coachId} deleted`);
+      const updatedCoaches = coaches.filter((coach) => coach._id !== coachId);
+      setCoaches(updatedCoaches);
+      setFilteredCoaches(updatedCoaches);
+      const confirmationMessage = `Coach with ID ${coachId} successfully deleted`;
+      console.log(confirmationMessage);
     } catch (error) {
       console.error("Error deleting coach:", error);
     }
   };
+
+
+  const handleConfirmDialogClose = () => {
+    setConfirmDialogOpen(false);
+  };
+
+  const handleCloseConfirmation = () => {
+    setSelectedCoachId(null);
+    setConfirmationOpen(false);
+  };
+
 
 const handleSearchChange = (event) => {
   const searchText = event.target.value.toLowerCase();
@@ -188,12 +202,14 @@ return (
         columns={columns}
         getRowId={(row) => row._id || Math.random()}
       />
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        message={snackbarMessage}
-      />
+<ConfirmationDialog
+  open={confirmationOpen}
+  onClose={() => setConfirmationOpen(false)} // Close the dialog when Cancel is clicked
+  onConfirm={handleConfirmAction} // Handle the confirmation action
+  title={actionType === "ban" ? "Ban Coach" : "Delete Coach"} // Set the title based on actionType
+  content={`Are you sure you want to ${actionType === "ban" ? "ban" : "delete"} this coach?`}
+/>
+
     </Box>
   </Box>
 );

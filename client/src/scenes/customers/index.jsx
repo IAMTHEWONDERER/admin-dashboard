@@ -4,6 +4,7 @@ import { Box, Button, TextField, Snackbar, useTheme } from "@mui/material";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from 'axios';
+import ConfirmationDialog from '../../components/confirmdialogue';
 
 const Customers = () => {
   const theme = useTheme();
@@ -12,8 +13,9 @@ const Customers = () => {
   const [searchText, setSearchText] = useState("");
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [confirmAction, setConfirmAction] = useState("");
+  const [selectedUserId, setSelectedUserId] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -22,68 +24,92 @@ const Customers = () => {
     }
   }, [navigate]);
 
+  const handleBanClick = (userId) => {
+    setSelectedUserId(userId);
+    setConfirmAction("ban");
+    setConfirmDialogOpen(true);
+  };
 
-  const handleBanClick = async (customerId) => {
-    console.log(`Toggling ban status for customer with ID ${customerId}`);
+  const handleDeleteClick = (userId) => {
+    setSelectedUserId(userId);
+    setConfirmAction("delete");
+    setConfirmDialogOpen(true);
+  };
+
+  const handleConfirmAction = async () => {
+    // Handle confirmation action based on confirmAction state
+    if (confirmAction === "ban") {
+      await banUser(selectedUserId);
+    } else if (confirmAction === "delete") {
+      await deleteUser(selectedUserId);
+    }
+    setConfirmDialogOpen(false); // Close the confirmation dialog
+  };
+
+  const banUser = async (userId) => {
     try {
-      const response = await axios.patch(
-        `http://localhost:3111/users/banuser/${customerId}`,
-        {
-          flag_system: "banned", // Assuming this endpoint toggles the ban status
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+      // Get the current status of the user
+      const currentUser = users.find((user) => user._id === userId);
+      if (!currentUser) {
+        console.error("User not found for ID:", userId);
+        return;
+      }
+      
+      // Determine the new flag_system value based on the current status
+      const newFlagSystem = currentUser.flag_system === "banned" ? "not banned" : "banned";
+  
+      // Make API request to update user's status
+      const response = await axios.patch(`http://localhost:3111/users/banuser/${userId}`, {
+        flag_system: newFlagSystem,
+      });
+      
+      console.log("Ban/Unban User Response:", response.data);
+  
+      // Update user status in state
+      const updatedUsers = users.map((user) =>
+        user._id === userId ? { ...user, flag_system: newFlagSystem } : user
       );
+      setUsers(updatedUsers);
+      setFilteredUsers(updatedUsers);
   
-      console.log("Response:", response.data);
-      const updatedUser = response.data;
-  
-      // Update the user's status in the local state
-      setUsers(users.map((user) =>
-        user._id === updatedUser._id ? updatedUser : user
-      ));
-      setFilteredUsers(filteredUsers.map((user) =>
-        user._id === updatedUser._id ? updatedUser : user
-      ));
-  
-      // Determine the snackbar message based on the updated user's ban status
-      const snackbarMessage = updatedUser.flag_system === "banned"
-        ? `User with ID ${customerId} successfully banned`
-        : `User with ID ${customerId} successfully unbanned`;
-  
-      // Show snackbar with the determined message
+      // Show appropriate snackbar message based on the action
+      const snackbarMessage = newFlagSystem === "banned"
+        ? `User with ID ${userId} successfully banned`
+        : `User with ID ${userId} successfully unbanned`;
       setSnackbarMessage(snackbarMessage);
       setSnackbarOpen(true);
+  
+      reloadPage(); // Reload the page after updating the user's status
     } catch (error) {
-      console.error("Error toggling ban status:", error);
-      console.log("Error response:", error.response);
+      console.error("Error banning/unbanning user:", error);
     }
   };
   
 
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setSnackbarOpen(false);
-  };
-
-  const handleDeleteClick = async (customerId) => {
-    console.log(`Deleting customer with ID ${customerId}`);
+  const deleteUser = async (userId) => {
     try {
-      // Send DELETE request to your backend API
-      await axios.delete(`http://localhost:3111/users/delete/${customerId}`);
-      // Remove the deleted user from the users state
-      const updatedUsers = users.filter(user => user._id !== customerId);
+      // Make API request to delete user
+      await axios.delete(`http://localhost:3111/users/delete/${userId}`);
+      console.log(`User with ID ${userId} deleted`);
+      // Update users state after deletion
+      const updatedUsers = users.filter(user => user._id !== userId);
       setUsers(updatedUsers);
-      setFilteredUsers(updatedUsers); // Update filteredUsers as well
+      setFilteredUsers(updatedUsers);
+      setSnackbarMessage(`User with ID ${userId} successfully deleted`);
+      setSnackbarOpen(true);
     } catch (error) {
       console.error("Error deleting user:", error);
     }
   };
+
+  const reloadPage = () => {
+    window.location.reload(); // Reload the page
+  };
+
+  const handleConfirmDialogClose = () => {
+    setConfirmDialogOpen(false);
+  };
+
 
   const handleSearchChange = (event) => {
     const searchText = event.target.value.toLowerCase();
@@ -96,6 +122,13 @@ const Customers = () => {
         user.flag_system.toLowerCase().includes(searchText)
     );
     setFilteredUsers(filteredUsers);
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
   };
 
   useEffect(() => {
@@ -180,11 +213,16 @@ const Customers = () => {
           columns={columns}
           getRowId={(row) => row._id} // Specify the unique ID for rows
         />
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={3000} 
-          onClose={handleSnackbarClose}
-          message={snackbarMessage}
+        <ConfirmationDialog
+          open={confirmDialogOpen}
+          onClose={handleConfirmDialogClose}
+          onConfirm={handleConfirmAction}
+          title={confirmAction === "ban" ? "Ban User" : "Delete User"}
+          content={
+            `Are you sure you want to ${
+              confirmAction === "ban" ? "ban" : "delete"
+            } this user?`
+          }
         />
       </Box>
     </Box>
