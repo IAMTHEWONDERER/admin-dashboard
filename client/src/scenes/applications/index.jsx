@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'; // Remove the React import
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
+import {jwtDecode} from 'jwt-decode';
 
 function Applications() {
   const [applications, setApplications] = useState([]);
+  const navigate = useNavigate();
   const [currentApplicationIndex, setCurrentApplicationIndex] = useState(0);
   const [noMoreApplications, setNoMoreApplications] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -27,6 +29,13 @@ function Applications() {
 
     fetchApplications();
   }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/signin");
+    }
+  }, [navigate]);
 
   const handleStatusChange = async (id, newStatus) => {
     try {

@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {jwtDecode} from 'jwt-decode';
 import { FormControl, MenuItem, InputLabel, Box, Select } from "@mui/material";
 import Header from "components/Header";
 import OverviewChart from "components/OverviewChart";
 
 const Overview = () => {
   const [view, setView] = useState("units");
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/signin");
+    }
+  }, [navigate]);
+  
   return (
     <Box m="1.5rem 2.5rem">
       <Header

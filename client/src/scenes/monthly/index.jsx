@@ -1,4 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {jwtDecode} from 'jwt-decode';
 import { Box, useTheme } from "@mui/material";
 import Header from "components/Header";
 import { ResponsiveLine } from "@nivo/line";
@@ -7,7 +9,7 @@ import { useGetSalesQuery } from "state/api";
 const Monthly = () => {
   const { data } = useGetSalesQuery();
   const theme = useTheme();
-
+  const navigate = useNavigate();
   const [formattedData] = useMemo(() => {
     if (!data) return [];
 
@@ -37,6 +39,14 @@ const Monthly = () => {
     const formattedData = [totalSalesLine, totalUnitsLine];
     return [formattedData];
   }, [data]); 
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/signin");
+    }
+  }, [navigate]);
+
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="MONTHLY SALES" subtitle="Chart of monthlysales" />

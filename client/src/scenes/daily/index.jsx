@@ -1,4 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {jwtDecode} from 'jwt-decode';
 import { Box, useTheme } from "@mui/material";
 import Header from "components/Header";
 import { ResponsiveLine } from "@nivo/line";
@@ -11,7 +13,7 @@ const Daily = () => {
   const [endDate, setEndDate] = useState(new Date("2021-03-01"));
   const { data } = useGetSalesQuery();
   const theme = useTheme();
-
+  const navigate = useNavigate();
   const [formattedData] = useMemo(() => {
     if (!data) return [];
 
@@ -46,6 +48,14 @@ const Daily = () => {
     const formattedData = [totalSalesLine, totalUnitsLine];
     return [formattedData];
   }, [data, startDate, endDate]); 
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/signin");
+    }
+  }, [navigate]);
+  
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="DAILY SALES" subtitle="Chart of daily sales" />
