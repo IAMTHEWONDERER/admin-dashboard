@@ -18,8 +18,8 @@ function AdminDashboard() {
       <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/Products" element={<Products />} />
-        <Route path="/customers" element={<Customers />} />
+        <Route path="/coaches" element={<Products />} />
+        <Route path="/Users" element={<Customers />} />
         <Route path="/transactions" element={<Transactions />} />
         <Route path="/applications" element={<Applications />} />
         <Route path="/overview" element={<Overview />} />

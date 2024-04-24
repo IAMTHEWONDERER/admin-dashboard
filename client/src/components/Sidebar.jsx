@@ -16,7 +16,6 @@ import {
   ChevronLeft,
   ChevronRightOutlined,
   HomeOutlined,
-  ShoppingCartOutlined,
   Groups2Outlined,
   ReceiptLongOutlined,
   PublicOutlined,
@@ -27,6 +26,7 @@ import {
   TrendingUpOutlined,
   PieChartOutlined,
 } from "@mui/icons-material";
+import PersonIcon from '@mui/icons-material/Person';
 import FlexBetween from "./FlexBetween";
 import { themeSettings } from "theme"; 
 import logo1 from "assets/Atlas-black.png";
@@ -35,8 +35,8 @@ import logo2 from "assets/Atlas-white.png";
 const navItems = [
   { text: "Dashboard", icon: <HomeOutlined /> },
   { text: "Client Facing", icon: null },
-  { text: "Products", icon: <ShoppingCartOutlined /> },
-  { text: "Customers", icon: <Groups2Outlined /> },
+  { text: "coaches", icon: <PersonIcon /> },
+  { text: "Users", icon: <Groups2Outlined /> },
   { text: "Transactions", icon: <ReceiptLongOutlined /> },
   { text: "Applications", icon: <PublicOutlined /> },
   { text: "Sales", icon: null },
