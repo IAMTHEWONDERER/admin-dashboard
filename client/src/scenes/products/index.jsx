@@ -132,15 +132,16 @@ useEffect(() => {
 
 const columns = [
   { field: "_id", headerName: "ID", flex: 1},
-  { field: "fullname", headerName: "Full Name", flex: 1 },
+  { field: "fullname", headerName: "Full Name", flex: 0.75 },
   { field: "email", headerName: "Email", flex: 1 },
+  { field: "price", headerName: "Price in $", flex: 0.5 },
   { field: "flag_system", headerName: "Status", flex: 1 },
   {
     field: "actions",
     headerName: "",
     flex: 1,
     renderCell: (params) => (
-      <Box mx={2} display="flex" alignItems="center" justifyContent="space-between">
+      <Box mx={-1} display="flex" alignItems="center" justifyContent="space-between">
         <Button
           variant="contained"
           color={params.row.flag_system === "banned" ? "primary" : "primary"}
