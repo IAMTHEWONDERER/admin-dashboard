@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { createContext,useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Snackbar, useTheme } from "@mui/material";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from 'axios';
 import ConfirmationDialog from '../../components/confirmdialogue';
+const UserCountContext = createContext(0);
 
 const Customers = () => {
+
   const theme = useTheme();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -16,13 +18,16 @@ const Customers = () => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState("");
   const [selectedUserId, setSelectedUserId] = useState("");
+  const [rowsCount, setRowsCount] = useState(0);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/signin");
-    }
-  }, [navigate]);
+    axios.get("http://localhost:3111/users/getall")
+      .then(response => {
+        setUsers(response.data);
+        setFilteredUsers(response.data);
+        setRowsCount(response.data.length);
+      })   
+  }, []);
 
   const handleBanClick = (userId) => {
     setSelectedUserId(userId);
@@ -37,25 +42,23 @@ const Customers = () => {
   };
 
   const handleConfirmAction = async () => {
-    // Handle confirmation action based on confirmAction state
+    
     if (confirmAction === "ban") {
       await banUser(selectedUserId);
     } else if (confirmAction === "delete") {
       await deleteUser(selectedUserId);
     }
-    setConfirmDialogOpen(false); // Close the confirmation dialog
+    setConfirmDialogOpen(false); 
   };
 
   const banUser = async (userId) => {
     try {
-      // Get the current status of the user
+      
       const currentUser = users.find((user) => user._id === userId);
       if (!currentUser) {
         console.error("User not found for ID:", userId);
         return;
       }
-      
-      // Determine the new flag_system value based on the current status
       const newFlagSystem = currentUser.flag_system === "banned" ? "not banned" : "banned";
   
       // Make API request to update user's status
@@ -124,18 +127,12 @@ const Customers = () => {
     setFilteredUsers(filteredUsers);
   };
 
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setSnackbarOpen(false);
-  };
-
   useEffect(() => {
     axios.get("http://localhost:3111/users/getall")
       .then(response => {
         setUsers(response.data);
-        setFilteredUsers(response.data); // Initialize filteredUsers with all users
+        setFilteredUsers(response.data);
+        setRowsCount(response.data.length);
       })
       .catch(err => console.log(err))
       .finally(() => setIsLoading(false));
@@ -172,7 +169,9 @@ const Customers = () => {
     },
   ];
 
+
   return (
+    <UserCountContext.Provider value={rowsCount}>
     <Box m="1.5rem 2.5rem">
       <Header title="USERS" subtitle="List of Users" />
       <Box
@@ -226,7 +225,10 @@ const Customers = () => {
         />
       </Box>
     </Box>
+    </UserCountContext.Provider>
   );
 };
+
+
 
 export default Customers;

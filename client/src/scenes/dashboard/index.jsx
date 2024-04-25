@@ -37,9 +37,8 @@ const Dashboard = () => {
     const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwtDecode(token);
-      setFullName(decodedToken.fullname); // Update fullName state
+      setFullName(decodedToken.fullname);
     } else {
-      // Redirect to sign-in if no token is present
       navigate("/signin");
     }
   
@@ -47,11 +46,11 @@ const Dashboard = () => {
       .then(response => {
         console.log(response.data);
         setBookings(response.data);
-        setIsLoading(false); // Set loading state
+        setIsLoading(false); 
       })
       .catch(err => {
         console.log("Error fetching bookings:", err);
-        setIsLoading(false); // Handle error by setting loading state
+        setIsLoading(false); 
       });
   }, [navigate]);
   
@@ -79,7 +78,6 @@ const Dashboard = () => {
     },
   ];
   
-
   return (
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
@@ -113,7 +111,6 @@ const Dashboard = () => {
           "& > div": { gridColumn: isNonMediumScreens ? undefined : "span 12" },
         }}
       >
-        {/* ROW 1 */}
         <StatBox
           title="Total Customers"
           value={data && data.totalCustomers}
@@ -126,10 +123,9 @@ const Dashboard = () => {
           }
         />
         <StatBox
-          title="Sales Today"
-          value={data && data.todayStats.totalSales}
-          increase="+21%"
-          description="Since last month"
+          title= "Bookings"
+          value={bookings.length}
+          description="All Time"
           icon={
             <PointOfSale
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
