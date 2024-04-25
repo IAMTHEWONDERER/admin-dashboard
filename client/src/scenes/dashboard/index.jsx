@@ -35,9 +35,12 @@ const Dashboard = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setFullName(decodedToken.fullname); // Update fullName state
+    } else {
+      // Redirect to sign-in if no token is present
       navigate("/signin");
-      return;
     }
   
     axios.get("http://localhost:3111/api/bookings")
