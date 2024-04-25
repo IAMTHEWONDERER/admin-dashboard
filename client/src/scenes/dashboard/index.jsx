@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
+import axios from 'axios';
 import {
   DownloadOutlined,
   Email,
@@ -27,50 +28,54 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const { data, isLoading } = useGetDashboardQuery();
   const [fullName, setFullName] = useState("");
+  const [bookings, setBookings] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { data } = useGetDashboardQuery();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      setFullName(decodedToken.fullname); // Update fullName state
-    } else {
-      // Redirect to sign-in if no token is present
+    if (!token) {
       navigate("/signin");
+      return;
     }
+  
+    axios.get("http://localhost:3111/api/bookings")
+      .then(response => {
+        console.log(response.data);
+        setBookings(response.data);
+        setIsLoading(false); // Set loading state
+      })
+      .catch(err => {
+        console.log("Error fetching bookings:", err);
+        setIsLoading(false); // Handle error by setting loading state
+      });
   }, [navigate]);
+  
 
   const columns = [
     {
-      field: "_id",
-      headerName: "ID",
-      flex: 1,
-    },
-    {
-      field: "userId",
+      field: "user_id",
       headerName: "User ID",
       flex: 1,
     },
     {
-      field: "createdAt",
-      headerName: "CreatedAt",
+      field: "coach_id",
+      headerName: "Coach ID",
       flex: 1,
     },
     {
-      field: "Products",
-      headerName: "# of Products",
-      flex: 0.5,
-      sortable: false,
-      renderCell: (params) => params.value.length,
+      field: "date",
+      headerName: "Created At",
+      flex: 1,
     },
     {
-      field: "cost",
-      headerName: "Cost",
+      field: "price",
+      headerName: "Price",
       flex: 1,
-      renderCell: (params) => `$${Number(params.value).toFixed(2)}`,
     },
   ];
+  
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -191,9 +196,9 @@ const Dashboard = () => {
           }}
         >
           <DataGrid
-            loading={isLoading || !data}
+            loading={isLoading}
             getRowId={(row) => row._id}
-            rows={(data && data.transactions) || []}
+            rows={bookings}
             columns={columns}
           />
         </Box>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Snackbar, useTheme } from "@mui/material";
+import { Box, Button, TextField, useTheme } from "@mui/material";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import ConfirmationDialog from "../../components/confirmation";
@@ -84,16 +84,6 @@ const Products = () => {
   };
 
 
-  const handleConfirmDialogClose = () => {
-    setConfirmDialogOpen(false);
-  };
-
-  const handleCloseConfirmation = () => {
-    setSelectedCoachId(null);
-    setConfirmationOpen(false);
-  };
-
-
 const handleSearchChange = (event) => {
   const searchText = event.target.value.toLowerCase();
   setSearchText(searchText);
@@ -110,7 +100,7 @@ const handleSearchChange = (event) => {
 useEffect(() => {
   axios.get("http://localhost:3111/coaches/getallcoaches")
     .then(response => {
-      console.log(response.data); // Check the structure of received data
+      console.log(response.data);
       setCoaches(response.data);
       setFilteredCoaches(response.data);
     })
