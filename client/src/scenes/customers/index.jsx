@@ -33,7 +33,7 @@ const Customers = () => {
     setConfirmAction("ban");
     setConfirmDialogOpen(true);
   };
-
+  
   const handleDeleteClick = (userId) => {
     setSelectedUserId(userId);
     setConfirmAction("delete");
@@ -41,7 +41,6 @@ const Customers = () => {
   };
 
   const handleConfirmAction = async () => {
-    
     if (confirmAction === "ban") {
       await banUser(selectedUserId);
     } else if (confirmAction === "delete") {
@@ -52,7 +51,6 @@ const Customers = () => {
 
   const banUser = async (userId) => {
     try {
-      
       const currentUser = users.find((user) => user._id === userId);
       if (!currentUser) {
         console.error("User not found for ID:", userId);
@@ -64,7 +62,6 @@ const Customers = () => {
       const response = await axios.patch(`http://localhost:3111/users/banuser/${userId}`, {
         flag_system: newFlagSystem,
       });
-      
       console.log("Ban/Unban User Response:", response.data);
   
       // Update user status in state
@@ -72,7 +69,7 @@ const Customers = () => {
         user._id === userId ? { ...user, flag_system: newFlagSystem } : user
       );
       setUsers(updatedUsers);
-      setFilteredUsers(updatedUsers);
+      setFilteredUsers(updatedUsers); 
   
       // Show appropriate snackbar message based on the action
       const snackbarMessage = newFlagSystem === "banned"
@@ -81,7 +78,7 @@ const Customers = () => {
       setSnackbarMessage(snackbarMessage);
       setSnackbarOpen(true);
   
-      reloadPage(); // Reload the page after updating the user's status
+      reloadPage(); 
     } catch (error) {
       console.error("Error banning/unbanning user:", error);
     }
@@ -99,6 +96,7 @@ const Customers = () => {
       setFilteredUsers(updatedUsers);
       setSnackbarMessage(`User with ID ${userId} successfully deleted`);
       setSnackbarOpen(true);
+      reloadPage(); 
     } catch (error) {
       console.error("Error deleting user:", error);
     }

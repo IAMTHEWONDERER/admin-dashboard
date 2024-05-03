@@ -300,10 +300,33 @@ const deleteCoachById = async (req, res) => {
     }
 };
 
+const banCoachById = async (req, res) => {
+    const { id } = req.params;
+    const { flag_system } = req.body;
+  
+    try {
+      const coach = await Coach.findById(id);
+      if (!coach) {
+        return res.status(404).json({ message: 'Coach not found' });
+      }
+  
+      // Update the coach's flag_system
+      coach.flag_system = flag_system;
+      await coach.save();
+  
+      res.status(200).json({ message: 'Coach status updated successfully', coach });
+    } catch (error) {
+      console.error('Error banning coach:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
+
 module.exports = {
     getAllCoaches,
     getCoachById,
     getCoachByFilter,
     updateCoachById,
-    deleteCoachById
+    deleteCoachById,
+    banCoachById
 };

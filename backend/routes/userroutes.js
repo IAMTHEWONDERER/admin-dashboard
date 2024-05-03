@@ -12,7 +12,7 @@ userroutes.get('/getall',   usercontrollers.getAllusers);
 userroutes.get('/getuser/:id',  usercontrollers.getuserById);
 userroutes.get('/filter', isAuthenticated, checkUserAdmin , usercontrollers.getuserByFilter);
 userroutes.put('/putuser/:id', isAuthenticated, checkUser , createCoachValidationRules(), validate , usercontrollers.updateuserById);
-userroutes.delete('/delete/:id', isAuthenticated, checkUserAdmin , usercontrollers.deleteuserById);
-
+userroutes.delete('/delete/:id',  usercontrollers.deleteuserById);
+userroutes.patch('/banuser/:id',  usercontrollers.banUserById);
 
 module.exports = userroutes ;

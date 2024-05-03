@@ -44,28 +44,35 @@ const Products = () => {
 
   const banCoach = async (coachId) => {
     try {
-      const response = await axios.patch(
-        `http://localhost:3111/coaches/bancoach/${coachId}`,
-        {
-          flag_system: "banned",
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      console.log("Ban Coach Response:", response.data);
-      const updatedCoach = response.data;
+      const currentCoach = coaches.find((coach) => coach._id === coachId);
+      if (!currentCoach) {
+        console.error("Coach not found for ID:", coachId);
+        return;
+      }
+      const newFlagSystem = currentCoach.flag_system === "banned" ? "not banned" : "banned";
+  
+      // Make API request to update user's status
+      const response = await axios.patch(`http://localhost:3111/coaches/bancoach/${coachId}`, {
+        flag_system: newFlagSystem,
+      });
+      console.log("Ban/Unban Coach Response:", response.data);
+  
+      // Update user status in state
       const updatedCoaches = coaches.map((coach) =>
-        coach._id === updatedCoach._id ? updatedCoach : coach
+        coach._id === coachId ? { ...coach, flag_system: newFlagSystem } : coach
       );
       setCoaches(updatedCoaches);
-      setFilteredCoaches(updatedCoaches);
-      const confirmationMessage = `Coach with ID ${coachId} successfully banned`;
-      console.log(confirmationMessage);
+      setFilteredCoaches(updatedCoaches); 
+  
+      // Show appropriate snackbar message based on the action
+      const snackbarMessage = newFlagSystem === "banned"
+        ? `Coach with ID ${coachId} successfully banned`
+        : `Coach with ID ${coachId} successfully unbanned`;
+      setSnackbarMessage(snackbarMessage);
+      setSnackbarOpen(true);
+      reloadPage(); 
     } catch (error) {
-      console.error("Error banning coach:", error);
+      console.error("Error banning/unbanning coach:", error);
     }
   };
 
