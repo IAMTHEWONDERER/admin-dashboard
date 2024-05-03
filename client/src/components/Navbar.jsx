@@ -75,7 +75,6 @@ import { useNavigate } from 'react-router-dom';
           </FlexBetween>
         </FlexBetween>
 
-        {/* RIGHT SIDE */}
         <FlexBetween gap="1.5rem">
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (

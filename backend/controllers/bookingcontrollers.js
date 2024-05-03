@@ -226,7 +226,7 @@ const getAllBookings = async (req, res) => {
     try {
         const bookings = await Booking.find();
 
-        res.status(200).json({bookings});
+        res.status(200).json(bookings);
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, error: 'Failed to retrieve bookings' });

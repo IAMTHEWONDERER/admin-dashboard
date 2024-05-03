@@ -8,8 +8,8 @@ const checkUserAdmin = require('../middlewares/checkUserAdmin');
 const userroutes = express.Router();
 userroutes.use(express.json());
 
-userroutes.get('/getall', isAuthenticated, checkAdmin ,  usercontrollers.getAllusers);
-userroutes.get('/getuser/:id', isAuthenticated, checkUserAdmin , usercontrollers.getuserById);
+userroutes.get('/getall',   usercontrollers.getAllusers);
+userroutes.get('/getuser/:id',  usercontrollers.getuserById);
 userroutes.get('/filter', isAuthenticated, checkUserAdmin , usercontrollers.getuserByFilter);
 userroutes.put('/putuser/:id', isAuthenticated, checkUser , createCoachValidationRules(), validate , usercontrollers.updateuserById);
 userroutes.delete('/delete/:id', isAuthenticated, checkUserAdmin , usercontrollers.deleteuserById);
