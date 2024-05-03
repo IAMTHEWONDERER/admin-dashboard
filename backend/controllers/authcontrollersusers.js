@@ -139,8 +139,8 @@ loginUser = (req, res) => {
         .then((isMatch) => {
           if (isMatch) {
             const payload = { id: user.id, name: user.name };
-            //giving user a jwt token to the signin process of our user
-            jwt.sign({ ...payload, fullname: user.fullname ,  role: user.role }, "secret", { expiresIn: "7d" }, (err, token) => {
+            const imageUrl = `../uploads/user/${user.image}`;
+            jwt.sign({ ...payload, image: imageUrl , fullname: user.fullname , role: user.role }, "secret", { expiresIn: "7d" }, (err, token) => {
               if (err) {
                 return res
                   .status(500)

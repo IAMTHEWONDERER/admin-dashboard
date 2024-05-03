@@ -10,7 +10,6 @@ import {
 import FlexBetween from "components/FlexBetween";
 import { useDispatch } from "react-redux";
 import { setMode } from "state"; 
-import profileImage from "assets/profile.jpeg";
 import {
   AppBar,
   Button,
@@ -24,6 +23,7 @@ import {
   useTheme, 
 } from "@mui/material";
 
+import {jwtDecode} from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
   const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
@@ -34,19 +34,22 @@ import { useNavigate } from 'react-router-dom';
   const isOpen = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
-  const handleLogout = () => {
-    
+  const [image, setImage] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken.image) {
+        setImage(decodedToken.image);
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {   
     localStorage.removeItem("token");
     navigate("/signin");
   };
-
-  useEffect(() => {
-    
-    const savedMode = localStorage.getItem("themeMode");
-    if (savedMode) {
-      dispatch(setMode(savedMode)); 
-    }
-  }, [dispatch]);
   
 
   return (
@@ -100,11 +103,12 @@ import { useNavigate } from 'react-router-dom';
             >
               <Box
                 component="img"
-                alt="profile"
-                src={profileImage}
-                height="32px"
-                width="32px"
+                alt="PROFILE"
+                src={image}
+                height="58px"
+                width="52px"
                 borderRadius="50%"
+                borderColor="black"
                 sx={{ objectFit: "cover" }}
               />
               <Box textAlign="left">
