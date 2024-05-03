@@ -90,6 +90,9 @@
                 default: tokensDark.primary[800], 
                 alt: tokensDark.primary[600], // Lighter shade of black
               },
+              test: {
+                main: tokensDark.grey[0],
+              },
             }
           : {
               // palette values for light mode
@@ -110,6 +113,9 @@
               background: {
                 default: tokensDark.grey[100], 
                 alt: tokensDark.grey[50], 
+              },
+              test: {
+                main: tokensDark.grey[1000]
               },
             }),
       },

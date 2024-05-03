@@ -22,8 +22,6 @@ import {
   PointOfSaleOutlined,
   TodayOutlined,
   CalendarMonthOutlined,
-  AdminPanelSettingsOutlined,
-  TrendingUpOutlined,
   PieChartOutlined,
 } from "@mui/icons-material";
 import PersonIcon from '@mui/icons-material/Person';
@@ -47,7 +45,6 @@ const navItems = [
 ];
 
 const Sidebar = ({
-  user,
   drawerWidth,
   isSidebarOpen,
   setIsSidebarOpen,
@@ -125,11 +122,11 @@ const Sidebar = ({
                       }}
                       sx={{
                         backgroundColor: isActive
-                          ? themeColors.secondary[900] // Red color when active
+                          ? themeColors.secondary[900] 
                           : "transparent",
                         color: isActive
-                          ? themeMode === "light" ? "#FFFFFF" : themeColors.secondary[1000] // White text when active in light mode
-                          : themeColors.secondary[1000], // Secondary 1000 for text
+                          ? themeMode === "light" ? "#FFFFFF" : themeColors.secondary[1000] 
+                          : themeColors.secondary[1000], 
                       }}
                     >
                       <ListItemIcon
