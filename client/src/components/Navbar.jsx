@@ -41,10 +41,10 @@ import { useNavigate } from 'react-router-dom';
   };
 
   useEffect(() => {
-    // Retrieve the saved theme mode from localStorage
+    
     const savedMode = localStorage.getItem("themeMode");
     if (savedMode) {
-      dispatch(setMode(savedMode)); // Set the theme mode based on the saved mode
+      dispatch(setMode(savedMode)); 
     }
   }, [dispatch]);
   

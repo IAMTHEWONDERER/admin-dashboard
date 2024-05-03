@@ -2,7 +2,7 @@ const User = require('../models/user');
 const Coach = require('../models/coach');
 const Booking = require('../models/booking');
 const jwt = require('jsonwebtoken');
-const Stripe_Key = process.env.STRIPE_KEY;
+const Stripe_Key = "sk_test_51NDw4VFcu0DV17ntoET434fmRVMakCc3fBnksrg8h0mzVwkOz3FpUpke3iYJe6DbBO4adbXXdr4luWdVJo5XinAi00so0l8EP3";
 const Stripe = require("stripe");
 
 /**
@@ -122,6 +122,7 @@ const getCheckoutSession = async (req,res) => {
             coach_id: coach._id,
             user_id: user,
             price: coach.price,
+            session: session.id,
             sessionType,
             location
         })
@@ -225,7 +226,7 @@ const getAllBookings = async (req, res) => {
     try {
         const bookings = await Booking.find();
 
-        res.status(200).json(bookings);
+        res.status(200).json({bookings});
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, error: 'Failed to retrieve bookings' });

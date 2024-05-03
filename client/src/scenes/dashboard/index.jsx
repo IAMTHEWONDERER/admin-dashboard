@@ -73,7 +73,7 @@ const Dashboard = () => {
     },
     {
       field: "price",
-      headerName: "Price",
+      headerName: "Price in $$",
       flex: 1,
     },
   ];

@@ -5,7 +5,6 @@ import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from 'axios';
 import ConfirmationDialog from '../../components/confirmdialogue';
-const UserCountContext = createContext(0);
 
 const Customers = () => {
 
@@ -171,7 +170,7 @@ const Customers = () => {
 
 
   return (
-    <UserCountContext.Provider value={rowsCount}>
+    
     <Box m="1.5rem 2.5rem">
       <Header title="USERS" subtitle="List of Users" />
       <Box
@@ -225,7 +224,6 @@ const Customers = () => {
         />
       </Box>
     </Box>
-    </UserCountContext.Provider>
   );
 };
 

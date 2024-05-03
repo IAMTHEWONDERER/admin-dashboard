@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const sendMailUser = require("../services/emailservice");
+const multer = require('multer');
 
 /**
  * @swagger
@@ -47,7 +48,12 @@ const sendMailUser = require("../services/emailservice");
 
 registerUser = async (req, res) => {
   try {
-    const { fullname, email, password, gender } = req.body;
+
+    if (!req.file) {
+      return res.status(400).send({ error: 'User image is required' });
+    }
+
+    const { fullname, email, password , gender } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -58,8 +64,8 @@ registerUser = async (req, res) => {
       fullname,
       email,
       password,
-      gender
-
+      gender,
+      image: req.file.filename,
     });
     
     const salt = await bcrypt.genSalt(10);
@@ -119,33 +125,45 @@ registerUser = async (req, res) => {
  */
 
 // Login function
-loginUser = async (req, res) => {
+loginUser = (req, res) => {
   const { email, password } = req.body;
-
-  try {
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(400).json({ message: "Invalid email or password" }); // More generic error message
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (isMatch) {
-      const payload = { id: user.id, name: user.name };
-      const token = await jwt.sign({ ...payload, role: user.role, fullname: user.fullname }, "secret", { expiresIn: "7d" });
-
-      res.json({ success: true, token: "Bearer " + token });
-    } else {
-      res.status(400).json({ message: "Invalid email or password" });
-    }
-  } catch (error) {
-    // Handle server errors for database interactions or bcrypt comparison
-    console.error("Error during login:", error); // Log the error for debugging
-    res.status(500).json({ message: "Internal server error" });
-  }
+  // checking if user doesnt exist
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      //comparing both password that is inputed and registered password
+      bcrypt
+        .compare(password, user.password)
+        .then((isMatch) => {
+          if (isMatch) {
+            const payload = { id: user.id, name: user.name };
+            //giving user a jwt token to the signin process of our user
+            jwt.sign({ ...payload, role: user.role }, "secret", { expiresIn: "7d" }, (err, token) => {
+              if (err) {
+                return res
+                  .status(500)
+                  .json({ message: "Failed to generate token", error: err });
+              }
+              res.json({ success: true, token: "Bearer " + token });
+            });
+          } else {
+            // displaying that the user has a wrong password
+            res.status(400).json({ message: "Email or Password are incorrect" });
+          }
+        })
+        // catching server errors
+        .catch((err) =>
+          res
+            .status(500)
+            .json({ message: "Failed to compare passwords", error: err }),
+        );
+    })
+    .catch((err) =>
+      res.status(500).json({ message: "Database error login", error: err }),
+    );
 };
-
 
 /**
  * @swagger

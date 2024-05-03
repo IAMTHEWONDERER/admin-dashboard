@@ -390,34 +390,6 @@ const updateuserById = async (req, res) => {
     }
 };
 
-const banuserById = async (req, res) => {
-    const userId = req.params.id;
-    console.log(req.body);
-    try {
-      // Find the user by ID
-      const user = await User.findById(userId);
-  
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-  
-      // Toggle the flag_system between "banned" and "not banned"
-      user.flag_system = user.flag_system === 'banned' ? 'not banned' : 'banned';
-  
-      // Save the updated user
-      const updatedUser = await user.save();
-      console.log("Updated user:", updatedUser);
-
-      // Send back the updated user data in the response
-      res.status(200).json(updatedUser);
-    } catch (error) {
-      console.error('Error banning/unbanning user:', error);
-      res.status(500).json({ error: 'Server error' });
-    }
-  };
-  
-  
-
 const deleteuserById = async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id);
@@ -435,6 +407,5 @@ module.exports = {
     getuserById,
     getuserByFilter,
     updateuserById,
-    banuserById,
     deleteuserById
 };

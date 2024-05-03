@@ -26,10 +26,14 @@ const bookingSchema = new Schema({
   },
   location: {
     type: String,
+  },
+  session: {
+    type: String 
   }
 }, {
   toJSON: {
     transform(doc, ret) {
+      delete ret._id;
       delete ret.__v;
     }
   }

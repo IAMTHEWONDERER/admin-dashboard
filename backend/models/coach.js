@@ -32,12 +32,10 @@ const coachSchema = new Schema({
   },
  
   city: {
-  required: true,
   type: String
   },
 
   address: {
-  required: true,
   type: String
   },
 
@@ -80,9 +78,11 @@ const coachSchema = new Schema({
 {
      toJSON: {
       transform(doc,ret){
+        delete ret._id;
         delete ret.password;
         delete ret.__v;
         delete ret.updatedAt;
+        delete ret.flag_system;
         delete ret.role; 
         delete ret.bank_details; 
     }

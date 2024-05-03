@@ -25,7 +25,6 @@ const userSchema = new Schema({
   },
   gender: {
     type: String,
-    required: true,
     enum: ['man', 'women']
   },
   height: {
@@ -93,9 +92,11 @@ const userSchema = new Schema({
 }, {
   toJSON: {
     transform(doc, ret) {
+      delete ret._id;
       delete ret.password;
       delete ret.__v;
       delete ret.updatedAt;
+      delete ret.flag_system;
       delete ret.role;
       delete ret.bank_details;
       delete ret.card;
