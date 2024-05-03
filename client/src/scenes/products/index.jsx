@@ -152,7 +152,7 @@ const columns = [
           color="error"
           onClick={() => handleDeleteClick(params.row._id)}
         >
-          <FaRegTrashAlt  />
+          <FaRegTrashAlt fontSize={"20px"} />
         </Button>
       </Box>
     ),
