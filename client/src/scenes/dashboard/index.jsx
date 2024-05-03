@@ -77,13 +77,13 @@ const Dashboard = () => {
       flex: 1,
     },
   ];
-  
+
   return (
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
           <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
         <Box display="flex" alignItems="center">
-        <Typography fontSize={"21px"} variant="h6">Welcome, {fullName}</Typography>
+        <Typography fontSize={"30px"} variant="h6">Welcome, {fullName}</Typography>
         </Box>
         <Box>
           <Button

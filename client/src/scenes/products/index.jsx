@@ -6,6 +6,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import ConfirmationDialog from "../../components/confirmation";
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
+import { FaRegTrashAlt } from "react-icons/fa";
 
 const Products = () => {
   const theme = useTheme();
@@ -141,18 +142,17 @@ const columns = [
       <Box mx={-1} display="flex" alignItems="center" justifyContent="space-between">
         <Button
           variant="contained"
-          color={params.row.flag_system === "banned" ? "primary" : "primary"}
+          color={params.row.flag_system === "banned" ? "primary" : "error"}
           onClick={() => handleBanClick(params.row._id)}
-        >
+        > 
           {params.row.flag_system === "banned" ? "Unban" : "Ban"}
         </Button>
         <Box mx={3} />
         <Button
-          variant="contained"
           color="error"
           onClick={() => handleDeleteClick(params.row._id)}
         >
-          Delete
+          <FaRegTrashAlt  />
         </Button>
       </Box>
     ),

@@ -5,6 +5,8 @@ import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from 'axios';
 import ConfirmationDialog from '../../components/confirmdialogue';
+import { FaRegTrashAlt } from "react-icons/fa";
+
 
 const Customers = () => {
 
@@ -148,18 +150,18 @@ const Customers = () => {
         <Box mx={2} display="flex" alignItems="center" justifyContent="space-between">
         <Button
           variant="contained"
-          color={params.row.flag_system === "banned" ? "primary" : "primary"}
+          color={params.row.flag_system === "banned" ? "primary" : "error"}
           onClick={() => handleBanClick(params.row._id)}
         >
           {params.row.flag_system === "banned" ? "Unban" : "Ban"}
         </Button>
           <Box mx={3} />
-          <Button
-            variant="contained"
+          <Button           
             color="error"
+            width="23px"
             onClick={() => handleDeleteClick(params.row._id)}
           >
-            Delete
+           <FaRegTrashAlt  />
           </Button>
         </Box>
       ),
