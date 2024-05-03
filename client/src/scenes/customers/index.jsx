@@ -161,7 +161,7 @@ const Customers = () => {
             width="23px"
             onClick={() => handleDeleteClick(params.row._id)}
           >
-           <FaRegTrashAlt  />
+           <FaRegTrashAlt fontSize={"20px"}  />
           </Button>
         </Box>
       ),
